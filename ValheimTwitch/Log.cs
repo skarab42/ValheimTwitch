@@ -4,7 +4,7 @@ namespace ValheimTwitch
 {
     class Log
     {
-        private static ManualLogSource logger = Logger.CreateLogSource(Plugin.LABEL);
+        private static readonly ManualLogSource logger = Logger.CreateLogSource(Plugin.LABEL);
 
         public static void Debug(string message)
         {
