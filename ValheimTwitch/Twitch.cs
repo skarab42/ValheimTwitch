@@ -6,8 +6,9 @@ namespace ValheimTwitch
     {
         private static string clientId;
         private static string accessToken;
-        private static WebClient client = new WebClient();
-        private static string helixURL = "https://api.twitch.tv/helix";
+
+        private static readonly WebClient client = new WebClient();
+        private static readonly string helixURL = "https://api.twitch.tv/helix";
 
         public static void SetAuth(string clientId, string accessToken)
         {
