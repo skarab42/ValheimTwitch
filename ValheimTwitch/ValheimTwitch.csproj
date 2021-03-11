@@ -152,8 +152,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SimpleJSON.cs" />
-    <Compile Include="Twitch.cs" />
+    <Compile Include="Twitch\Client.cs" />
+    <Compile Include="Vendor\SimpleJSON.cs" />
+    <Compile Include="Twitch\Credentials.cs" />
+    <Compile Include="Twitch\Helix\User.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

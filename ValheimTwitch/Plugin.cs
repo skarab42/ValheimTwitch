@@ -30,11 +30,12 @@ namespace ValheimTwitch
             } 
             else
             {
-                Twitch.SetAuth(twitchClientId.Value, twitchAccessToken.Value);
+                var twitchCredentials = new Twitch.Credentials(twitchClientId.Value, twitchAccessToken.Value);
+                var twitchClient = new Twitch.Client(twitchCredentials);
 
                 try
                 {
-                    TwitchUser user = Twitch.GetUser();
+                    Twitch.Helix.User user = twitchClient.GetUser();
 
                     Log.Info($"Twitch User: {user.displayName}");
                 } catch (Exception e)
