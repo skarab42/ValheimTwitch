@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using UnityEngine;
 
 namespace ValheimTwitch
 {
@@ -11,15 +12,29 @@ namespace ValheimTwitch
         public const string LABEL = "ValheimTwitch";
         public const string VERSION = "0.1.0";
 
+        public const string TWITCH_TOKEN_GENERATOR_URL = "https://twitchtokengenerator.com";
+
         public static ConfigEntry<string> twitchClientId;
         public static ConfigEntry<string> twitchAccessToken;
 
         void Awake()
         {
-            Log.Info($"{NAME} Awake!");
-
             twitchClientId = Config.Bind("Twitch", "ClientId", "", "Twitch client ID");
             twitchAccessToken = Config.Bind("Twitch", "AccessToken", "", "Twitch access token");
-        }
+
+            if (twitchClientId.Value.Length == 0 || twitchAccessToken.Value.Length == 0)
+            {
+                // TODO open custom url with tutorial or handle Twitch login direcly ?
+                Application.OpenURL(TWITCH_TOKEN_GENERATOR_URL);
+            } 
+            else
+            {
+                Twitch.SetAuth(twitchClientId.Value, twitchAccessToken.Value);
+
+                var user = Twitch.GetUser();
+
+                Log.Info($"User: {user}");
+            }
+        } 
     }
 }
