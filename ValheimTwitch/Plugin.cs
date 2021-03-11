@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using System;
 using UnityEngine;
 
 namespace ValheimTwitch
@@ -17,7 +18,7 @@ namespace ValheimTwitch
         public static ConfigEntry<string> twitchClientId;
         public static ConfigEntry<string> twitchAccessToken;
 
-        void Awake()
+        public void Awake()
         {
             twitchClientId = Config.Bind("Twitch", "ClientId", "", "Twitch client ID");
             twitchAccessToken = Config.Bind("Twitch", "AccessToken", "", "Twitch access token");
@@ -31,9 +32,16 @@ namespace ValheimTwitch
             {
                 Twitch.SetAuth(twitchClientId.Value, twitchAccessToken.Value);
 
-                var user = Twitch.GetUser();
+                try
+                {
+                    TwitchUser user = Twitch.GetUser();
 
-                Log.Info($"User: {user}");
+                    Log.Info($"Twitch User: {user.displayName}");
+                } catch (Exception e)
+                {
+                    Log.Error($"Twitch User: {e.Message}");
+                    // TODO open custom url with how to setup
+                }
             }
         } 
     }
