@@ -3,6 +3,9 @@ using System.Net;
 
 namespace ValheimTwitch.Twitch
 {
+    /// <summary>
+    /// Twitch API client.
+    /// </summary>
     class Client
     {
         public Helix.User user;

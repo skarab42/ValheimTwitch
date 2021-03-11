@@ -2,39 +2,62 @@
 
 namespace ValheimTwitch.Twitch.Helix
 {
+    /// <summary>Twitch helix user.</summary>
     public class User
     {
-        /// <summary>User’s broadcaster type: "partner", "affiliate", or "".</summary>
+        /// <summary>
+        /// User’s broadcaster type: "partner", "affiliate", or "".
+        /// </summary>
         public string broadcasterType;
 
-        /// <summary>User’s channel description.</summary>
+        /// <summary>
+        /// User’s channel description.
+        /// </summary>
         public string description;
 
-        /// <summary>User’s display name.</summary>
+        /// <summary>
+        /// User’s display name.
+        /// </summary>
         public string displayName;
 
-        /// <summary>User’s ID.</summary>
+        /// <summary>
+        /// User’s ID.
+        /// </summary>
         public string id;
 
-        /// <summary>User’s login name.</summary>
+        /// <summary>
+        /// User’s login name.
+        /// </summary>
         public string login;
 
-        /// <summary>URL of the user’s offline image.</summary>
+        /// <summary>
+        /// URL of the user’s offline image.
+        /// </summary>
         public string offlineImageURL;
 
-        /// <summary>URL of the user’s profile image.</summary>
+        /// <summary>
+        /// URL of the user’s profile image.
+        /// </summary>
         public string profileImageURL;
 
-        /// <summary>User’s type: "staff", "admin", "global_mod", or "".</summary>
+        /// <summary>
+        /// User’s type: "staff", "admin", "global_mod", or "".
+        /// </summary>
         public string type;
 
-        /// <summary>Total number of views of the user’s channel.</summary>
+        /// <summary>
+        /// Total number of views of the user’s channel.
+        /// </summary>
         public int viewCount;
 
-        /// <summary>User’s verified email address. Returned if the request includes the user:read:email scope.</summary>
+        /// <summary>
+        /// User’s verified email address. Returned if the request includes the user:read:email scope.
+        /// </summary>
         public string email;
 
-        /// <summary>Date when the user was created.</summary>
+        /// <summary>
+        /// Date when the user was created.
+        /// </summary>
         public string createdAt;
 
         public static User Factory(JSONNode node)
