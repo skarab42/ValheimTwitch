@@ -6,14 +6,13 @@ namespace ValheimTwitch.Twitch
     /// <summary>
     /// Twitch API client.
     /// </summary>
-    class Client
+    public class Client
     {
         public Helix.User user;
 
         private readonly Credentials credentials;
-
-        private static readonly WebClient client = new WebClient();
-        private static readonly string helixURL = "https://api.twitch.tv/helix";
+        private readonly WebClient client = new WebClient();
+        private readonly string helixURL = "https://api.twitch.tv/helix";
 
         public Client(Credentials credentials)
         {

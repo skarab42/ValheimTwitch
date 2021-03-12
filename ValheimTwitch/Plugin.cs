@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using HarmonyLib;
 using System;
 using UnityEngine;
 
@@ -15,11 +16,30 @@ namespace ValheimTwitch
 
         public const string TWITCH_TOKEN_GENERATOR_URL = "https://twitchtokengenerator.com";
 
-        public static ConfigEntry<string> twitchClientId;
-        public static ConfigEntry<string> twitchAccessToken;
+        public ConfigEntry<string> twitchClientId;
+        public ConfigEntry<string> twitchAccessToken;
+
+        public Twitch.Client twitchClient;
+
+        private static Plugin instance;
+
+        public static Plugin Instance
+        {
+            get => instance;
+            private set { instance = value; }
+        }
+
+        private Plugin() { }
 
         public void Awake()
         {
+            if (instance != null && instance != this)
+            {
+                Destroy(gameObject);
+            }
+
+            instance = this;
+
             twitchClientId = Config.Bind("Twitch", "ClientId", "", "Twitch client ID");
             twitchAccessToken = Config.Bind("Twitch", "AccessToken", "", "Twitch access token");
 
@@ -27,23 +47,27 @@ namespace ValheimTwitch
             {
                 // TODO open custom url with tutorial or handle Twitch login direcly ?
                 Application.OpenURL(TWITCH_TOKEN_GENERATOR_URL);
-            } 
+            }
             else
             {
                 var twitchCredentials = new Twitch.Credentials(twitchClientId.Value, twitchAccessToken.Value);
-                var twitchClient = new Twitch.Client(twitchCredentials);
+                twitchClient = new Twitch.Client(twitchCredentials);
 
                 try
                 {
                     Twitch.Helix.User user = twitchClient.GetUser();
 
-                    Log.Info($"Twitch User: {user.displayName}");
-                } catch (Exception e)
+                    Log.Info($"Twitch User: {user.login}");
+                }
+                catch (Exception e)
                 {
                     Log.Error($"Twitch User: {e.Message}");
                     // TODO open custom url with how to setup
                 }
             }
-        } 
+
+            Harmony harmony = new Harmony(GUID);
+            harmony.PatchAll();
+        }
     }
 }

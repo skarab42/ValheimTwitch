@@ -1,6 +1,6 @@
 ﻿namespace ValheimTwitch.Twitch
 {
-    class Credentials
+    public class Credentials
     {
         public string clientId;
         public string accessToken;
