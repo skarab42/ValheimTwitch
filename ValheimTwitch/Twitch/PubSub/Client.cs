@@ -11,8 +11,13 @@ namespace ValheimTwitch.Twitch.PubSub
     {
         public Messages.Redemption Redemption { get; set; }
     }
+    public class MaxReconnectErrorArgs : EventArgs
+    {
+        public string Message { get; set; }
+    }
 
     public delegate void RewardRedeemedHandler(object sender, RewardRedeemedArgs e);
+    public delegate void MaxReconnectErrorHandler(object sender, MaxReconnectErrorArgs e);
 
     /// <summary>
     /// Twitch PubSub client.
@@ -22,19 +27,30 @@ namespace ValheimTwitch.Twitch.PubSub
         public Twitch.Client client;
 
         public event RewardRedeemedHandler OnRewardRedeemed;
-        
-        private WebSocket ws;
-        private System.Timers.Timer pingTimer;
-        private System.Timers.Timer pongTimer;
+        public event MaxReconnectErrorHandler OnMaxReconnect;
 
-        private const string pubSubURL = "wss://pubsub-edge.twitch.tv";
+        private WebSocket WS;
+
+        private readonly System.Timers.Timer PingTimer;
+        private readonly System.Timers.Timer PongTimer;
+
+        private const string PubSubURL = "wss://pubsub-edge.twitch.tv";
+        public const int MaxReconnection = 9; // ~2 min.
+
+        private int ReconnectionCount = 0;
+        private int ReconnectionInterval = 1000;
 
         public Client(Twitch.Client client)
         {
             this.client = client;
 
-            pingTimer = new System.Timers.Timer();
-            pingTimer.Elapsed += OnPingEvent;
+            PingTimer = new System.Timers.Timer();
+            PingTimer.Elapsed += OnPingEvent;
+
+            PongTimer = new System.Timers.Timer();
+            PongTimer.Elapsed += OnPongTimeoutEvent;
+            PongTimer.AutoReset = false;
+            PongTimer.Interval = 10000;
 
             SetRandomPingInterval();
         }
@@ -45,47 +61,86 @@ namespace ValheimTwitch.Twitch.PubSub
 
         protected void SetRandomPingInterval()
         {
-            pingTimer.Interval = 60000 * GetRandomNumber(3, 4);
+            PingTimer.Interval = 60000 * GetRandomNumber(3, 4);
         }
 
         // * Clients must LISTEN on at least one topic within 15 seconds of establishing the connection, or they will be disconnected by the server.
         // * Clients must send a PING command at least once every 5 minutes
-        // - If a client does not receive a PONG message within 10 seconds of issuing a PING command,
-        // - ...it should reconnect to the server. 
-        // - Clients may receive a RECONNECT message at any time.
+        // * If a client does not receive a PONG message within 10 seconds of issuing a PING command, it should reconnect to the server. 
+        // * Clients may receive a RECONNECT message at any time.
         //   This indicates that the server is about to restart (typically for maintenance) and will disconnect the client within 30 seconds.
         //   During this time, we recommend that clients reconnect to the server; otherwise, the client will be forcibly disconnected.
         public void Connect()
         {
-            if (ws != null)
-            {
-                throw new Exception("Websocket already connected");
-            }
+            Log.Debug("Connect");
 
-            Log.Info("Connected");
-
-            ws = new WebSocket(pubSubURL);
-            
-            ws.OnOpen += OnOpen;
-            ws.OnClose += OnClose;
-            ws.OnMessage += OnMessage;
-            ws.OnError += OnError;
-
-            ws.Connect();
-        }
-
-        public void Disconnect()
-        {
-            if (ws == null)
+            if (WS != null)
             {
                 return;
             }
 
-            Log.Info("Disconnected");
+            try
+            {
+                WS = new WebSocket(PubSubURL);
 
-            ws.Close();
-            pingTimer.Stop();
-            pongTimer.Stop();
+                WS.OnOpen += OnOpen;
+                WS.OnClose += OnClose;
+                WS.OnMessage += OnMessage;
+                WS.OnError += OnError;
+
+                WS.Connect();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+
+                Reconnect();
+            }
+        }
+
+        public void Disconnect()
+        {
+            Log.Debug("Disconnect");
+
+            if (WS == null)
+            {
+                return;
+            }
+
+            PingTimer.Stop();
+            PongTimer.Stop();
+
+            WS.Close();
+
+            WS = null;
+        }
+
+        public void Reconnect()
+        {
+            ReconnectionCount++;
+
+            if (ReconnectionCount > MaxReconnection)
+            {
+                var message = $"Maximum number of reconnections reached {ReconnectionCount}/{MaxReconnection}";
+
+                OnMaxReconnect?.Invoke(this, new MaxReconnectErrorArgs { Message = message });
+
+                return;
+            }
+
+            Log.Info($"Reconnect {ReconnectionCount}/{MaxReconnection} (backoff: {ReconnectionInterval / 1000} sec.)");
+
+            Disconnect();
+
+            var timer = new System.Timers.Timer();
+
+            timer.Elapsed += (object source, System.Timers.ElapsedEventArgs e) => Connect();
+            timer.Interval = ReconnectionInterval;
+            timer.AutoReset = false;
+
+            timer.Start();
+
+            ReconnectionInterval *= 2;
         }
 
         protected double GetRandomNumber(double minimum, double maximum)
@@ -96,19 +151,15 @@ namespace ValheimTwitch.Twitch.PubSub
 
         protected void OnPingEvent(object source, System.Timers.ElapsedEventArgs e)
         {
-            if (ws == null || !ws.IsAlive)
+            if (WS == null || !WS.IsAlive)
             {
                 return;
             }
 
-            Log.Info("PING");
-            ws.Send(@"{""type"": ""PING""}");
+            Log.Debug("PING");
+            WS.Send(@"{""type"": ""PING""}");
 
-            pongTimer = new System.Timers.Timer();
-            pongTimer.Elapsed += OnPongTimeoutEvent;
-            pongTimer.AutoReset = false;
-            pongTimer.Interval = 10000;
-            pongTimer.Start();
+            PongTimer.Start();
 
             SetRandomPingInterval();
         }
@@ -116,13 +167,16 @@ namespace ValheimTwitch.Twitch.PubSub
         private void OnPongTimeoutEvent(object sender, ElapsedEventArgs e)
         {
             Log.Error("Pong timeout!");
-            Disconnect();
-            // TODO reconnect
+
+            Reconnect();
         }
 
         protected void OnOpen(object sender, EventArgs e)
         {
-            Log.Info("OnOpen");
+            Log.Debug("OnOpen");
+
+            ReconnectionCount = 0;
+            ReconnectionInterval = 1000;
 
             if (OnRewardRedeemed != null)
             {
@@ -134,30 +188,28 @@ namespace ValheimTwitch.Twitch.PubSub
                     var message = new Messages.Listen(client.GetUserAcessToken(), topics, topic);
                     var json = JsonConvert.SerializeObject(message);
 
-                    ws.Send(json);
-                    pingTimer.Start();
+                    WS.Send(json);
+                    PingTimer.Start();
                 } 
                 catch (Exception ex)
                 {
                     Log.Error(ex.ToString());
-                    // TODO try to reconnect ?
+
+                    Reconnect();
                 }
             }
         }
 
         protected void OnClose(object sender, CloseEventArgs e)
         {
-            Log.Info("OnClose");
-            pingTimer.Stop();
-            pongTimer.Stop();
+            Log.Debug("OnClose");
         }
 
         private void OnError(object sender, ErrorEventArgs e)
         {
             Log.Error(e.Message);
-            pingTimer.Stop();
-            pongTimer.Stop();
-            // TODO reconnect
+
+            Reconnect();
         }
 
         protected void OnMessage(object sender, MessageEventArgs e)
@@ -168,7 +220,8 @@ namespace ValheimTwitch.Twitch.PubSub
 
             if (iMessage.Type == "PONG")
             {
-                pongTimer.Stop();
+                PongTimer.Stop();
+
                 return;
             }
 
@@ -182,6 +235,13 @@ namespace ValheimTwitch.Twitch.PubSub
 
                     OnRewardRedeemed?.Invoke(this, new RewardRedeemedArgs { Redemption = rewardRedeem.Data.Redemption });
                 }
+
+                return;
+            }
+
+            if (iMessage.Type == "RECONNECT")
+            {
+                Reconnect();
 
                 return;
             }
