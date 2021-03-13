@@ -1,4 +1,5 @@
-﻿using SimpleJSON;
+﻿using Newtonsoft.Json;
+using SimpleJSON;
 using System.Net;
 
 namespace ValheimTwitch.Twitch
@@ -34,18 +35,27 @@ namespace ValheimTwitch.Twitch
 
         public Helix.User GetUser(bool force = false)
         {
-            if (user != null && force == true)
+            if (user != null && force == false)
             {
                 return user;
             }
 
             string json = Get($"{helixURL}/users");
 
+            var users = JsonConvert.DeserializeObject<Helix.Users>(json);
+
+            Log.Info(">>>>>>" + users.Data[0].DisplayName);
+
             JSONNode node = JSON.Parse(json);
 
             user = Helix.User.Factory(node["data"][0]);
 
             return user;
+        }
+
+        public string GetUserAcessToken()
+        {
+            return credentials.accessToken;
         }
     }
 }
