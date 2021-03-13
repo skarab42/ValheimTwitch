@@ -3,7 +3,6 @@ using BepInEx.Configuration;
 using HarmonyLib;
 using System;
 using UnityEngine;
-using ValheimTwitch.Twitch.PubSub;
 
 namespace ValheimTwitch
 {
@@ -20,7 +19,7 @@ namespace ValheimTwitch
         public ConfigEntry<string> twitchClientId;
         public ConfigEntry<string> twitchAccessToken;
 
-        public Twitch.Client twitchClient;
+        public Twitch.API.Client twitchClient;
         public Twitch.PubSub.Client twitchPubSubClient;
 
         private static Plugin instance;
@@ -54,10 +53,10 @@ namespace ValheimTwitch
             {
                 try
                 {
-                    twitchClient = new Twitch.Client(twitchClientId.Value, twitchAccessToken.Value);
+                    twitchClient = new Twitch.API.Client(twitchClientId.Value, twitchAccessToken.Value);
                     twitchPubSubClient = new Twitch.PubSub.Client(twitchClient);
 
-                    Twitch.Helix.User user = twitchClient.GetUser();
+                    Twitch.API.Helix.User user = twitchClient.GetUser();
                     Log.Info($"Twitch User: {user.Login}");
 
                     twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
@@ -75,7 +74,7 @@ namespace ValheimTwitch
             harmony.PatchAll();
         }
 
-        private void OnMaxReconnect(object sender, MaxReconnectErrorArgs e)
+        private void OnMaxReconnect(object sender, Twitch.PubSub.MaxReconnectErrorArgs e)
         {
             Log.Info($"OnMaxReconnect: {e.Message}");
         }

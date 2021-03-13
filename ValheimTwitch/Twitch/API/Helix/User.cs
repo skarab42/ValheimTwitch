@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace ValheimTwitch.Twitch.Helix
+namespace ValheimTwitch.Twitch.API.Helix
 {
     public class User
     {

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
 
-namespace ValheimTwitch.Twitch
+namespace ValheimTwitch.Twitch.API
 {
     /// <summary>
     /// Twitch API client.

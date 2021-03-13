@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Timers;
@@ -24,7 +23,7 @@ namespace ValheimTwitch.Twitch.PubSub
     /// </summary>
     public class Client
     {
-        public Twitch.Client client;
+        public API.Client client;
 
         public event RewardRedeemedHandler OnRewardRedeemed;
         public event MaxReconnectErrorHandler OnMaxReconnect;
@@ -40,7 +39,7 @@ namespace ValheimTwitch.Twitch.PubSub
         private int ReconnectionCount = 0;
         private int ReconnectionInterval = 1000;
 
-        public Client(Twitch.Client client)
+        public Client(API.Client client)
         {
             this.client = client;
 
@@ -55,9 +54,9 @@ namespace ValheimTwitch.Twitch.PubSub
             SetRandomPingInterval();
         }
 
-        public Client(Credentials credentials) : this(new Twitch.Client(credentials)) {}
+        public Client(Credentials credentials) : this(new API.Client(credentials)) {}
 
-        public Client(string clientId, string accessToken) : this(new Twitch.Client(clientId, accessToken)) { }
+        public Client(string clientId, string accessToken) : this(new API.Client(clientId, accessToken)) { }
 
         protected void SetRandomPingInterval()
         {
@@ -134,7 +133,7 @@ namespace ValheimTwitch.Twitch.PubSub
 
             var timer = new System.Timers.Timer();
 
-            timer.Elapsed += (object source, System.Timers.ElapsedEventArgs e) => Connect();
+            timer.Elapsed += (object source, ElapsedEventArgs e) => Connect();
             timer.Interval = ReconnectionInterval;
             timer.AutoReset = false;
 
@@ -149,7 +148,7 @@ namespace ValheimTwitch.Twitch.PubSub
             return random.NextDouble() * (maximum - minimum) + minimum;
         }
 
-        protected void OnPingEvent(object source, System.Timers.ElapsedEventArgs e)
+        protected void OnPingEvent(object source, ElapsedEventArgs e)
         {
             if (WS == null || !WS.IsAlive)
             {

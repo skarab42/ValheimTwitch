@@ -219,9 +219,9 @@
     </Compile>
     <Compile Include="GameClasses\FejdStartupPatch.cs" />
     <Compile Include="Twitch\PubSub\Client.cs" />
-    <Compile Include="Twitch\Helix\User.cs" />
-    <Compile Include="Twitch\Helix\Users.cs" />
-    <Compile Include="Twitch\Client.cs" />
+    <Compile Include="Twitch\API\Helix\User.cs" />
+    <Compile Include="Twitch\API\Helix\Users.cs" />
+    <Compile Include="Twitch\API\Client.cs" />
     <Compile Include="Twitch\Credentials.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Plugin.cs" />
