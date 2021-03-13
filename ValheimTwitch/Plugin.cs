@@ -20,7 +20,7 @@ namespace ValheimTwitch
         public ConfigEntry<string> twitchAccessToken;
 
         public Twitch.Client twitchClient;
-        public Twitch.PubSub twitchPubSub;
+        public Twitch.PubSub.Client twitchPubSubClient;
 
         private static Plugin instance;
 
@@ -54,13 +54,13 @@ namespace ValheimTwitch
                 try
                 {
                     twitchClient = new Twitch.Client(twitchClientId.Value, twitchAccessToken.Value);
-                    twitchPubSub = new Twitch.PubSub(twitchClient);
+                    twitchPubSubClient = new Twitch.PubSub.Client(twitchClient);
 
                     Twitch.Helix.User user = twitchClient.GetUser();
-                    Log.Info($"Twitch User: {user.login}");
+                    Log.Info($"Twitch User: {user.Login}");
 
-                    twitchPubSub.OnRewardRedeemed += OnRewardRedeemed;
-                    twitchPubSub.Connect();
+                    twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
+                    twitchPubSubClient.Connect();
                 }
                 catch (Exception e)
                 {
@@ -73,10 +73,9 @@ namespace ValheimTwitch
             harmony.PatchAll();
         }
 
-        private void OnRewardRedeemed(object sender, Twitch.RewardRedeemedArgs e)
+        private void OnRewardRedeemed(object sender, Twitch.PubSub.RewardRedeemedArgs e)
         {
-            var id = e.Data["redemption"]["id"];
-            Log.Info($"OnRewardRedeemed: {id}");
+            Log.Info($"OnRewardRedeemed: {e.Redemption.Reward.Title}");
         }
     }
 }

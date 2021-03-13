@@ -36,7 +36,7 @@ namespace ValheimTwitch
             }
             else
             {
-                text.text = $"Valheim Twitch: {user.displayName}";
+                text.text = $"Valheim Twitch: {user.DisplayName}";
             }
 
             text.color = Color.white;

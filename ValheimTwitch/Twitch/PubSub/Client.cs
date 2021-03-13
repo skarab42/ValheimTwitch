@@ -1,14 +1,15 @@
-﻿using SimpleJSON;
+﻿using BepInEx.Logging;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Timers;
 using WebSocketSharp;
 
-namespace ValheimTwitch.Twitch
+namespace ValheimTwitch.Twitch.PubSub
 {
     public class RewardRedeemedArgs : EventArgs
     {
-        public string Message { get; set; }
-        public JSONNode Data { get; set; }
+        public Messages.Redemption Redemption { get; set; }
     }
 
     public delegate void RewardRedeemedHandler(object sender, RewardRedeemedArgs e);
@@ -16,9 +17,9 @@ namespace ValheimTwitch.Twitch
     /// <summary>
     /// Twitch PubSub client.
     /// </summary>
-    public class PubSub
+    public class Client
     {
-        public Client client;
+        public Twitch.Client client;
 
         public event RewardRedeemedHandler OnRewardRedeemed;
         
@@ -28,7 +29,7 @@ namespace ValheimTwitch.Twitch
 
         private const string pubSubURL = "wss://pubsub-edge.twitch.tv";
 
-        public PubSub(Client client)
+        public Client(Twitch.Client client)
         {
             this.client = client;
 
@@ -38,9 +39,9 @@ namespace ValheimTwitch.Twitch
             SetRandomPingInterval();
         }
 
-        public PubSub(Credentials credentials) : this(new Client(credentials)) {}
+        public Client(Credentials credentials) : this(new Twitch.Client(credentials)) {}
 
-        public PubSub(string clientId, string accessToken) : this(new Client(clientId, accessToken)) { }
+        public Client(string clientId, string accessToken) : this(new Twitch.Client(clientId, accessToken)) { }
 
         protected void SetRandomPingInterval()
         {
@@ -128,20 +129,18 @@ namespace ValheimTwitch.Twitch
                 try
                 {
                     var user = client.GetUser();
-                    var json = JSON.Parse("{}");
+                    var topic = $"channel-points-channel-v1.{user.Id}";
+                    var topics = new List<string>(new string[] { topic });
+                    var message = new Messages.Listen(client.GetUserAcessToken(), topics, topic);
+                    var json = JsonConvert.SerializeObject(message);
 
-                    json["type"] = "LISTEN";
-                    json["data"] = JSON.Parse("{}");
-                    json["nonce"] = "OnRewardRedeemed";
-                    json["data"]["auth_token"] = client.GetUserAcessToken();
-                    json["data"]["topics"][0] = $"channel-points-channel-v1.{user.id}";
-
-                    Log.Info(json.ToString());
-                    ws.Send(json.ToString());
+                    ws.Send(json);
                     pingTimer.Start();
-                } catch (Exception ex)
+                } 
+                catch (Exception ex)
                 {
                     Log.Error(ex.ToString());
+                    // TODO try to reconnect ?
                 }
             }
         }
@@ -165,34 +164,27 @@ namespace ValheimTwitch.Twitch
         {
             Log.Debug($"OnMessage: {e.Data}");
 
-            var data = JSON.Parse(e.Data);
+            var iMessage = JsonConvert.DeserializeObject<Messages.IncomingMessage>(e.Data);
 
-            if (data["type"] == "PONG")
+            if (iMessage.Type == "PONG")
             {
                 pongTimer.Stop();
                 return;
             }
 
-            if (data["type"] == "MESSAGE")
+            if (iMessage.Type == "MESSAGE")
             {
-                var topic = data["data"]["topic"].Value;
-                var message = data["data"]["message"].Value;
+                var message = iMessage as Messages.Message;
 
-                if (topic.StartsWith("channel-points-channel"))
+                if (message.Data.Topic.StartsWith("channel-points-channel"))
                 {
-                    var jsonData = JSON.Parse(message);
+                    var rewardRedeem = JsonConvert.DeserializeObject<Messages.RewardRedeem>(message.Data.Message);
 
-                    if (jsonData["type"] == "reward-redeemed") 
-                    {
-                        OnRewardRedeemed?.Invoke(this, new RewardRedeemedArgs { Message = message, Data = jsonData["data"] });
-                    }
-
+                    OnRewardRedeemed?.Invoke(this, new RewardRedeemedArgs { Redemption = rewardRedeem.Data.Redemption });
                 }
 
                 return;
             }
-
-            
         }
     }
 }

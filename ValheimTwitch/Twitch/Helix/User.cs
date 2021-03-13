@@ -1,83 +1,69 @@
-﻿using SimpleJSON;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace ValheimTwitch.Twitch.Helix
 {
-    /// <summary>Twitch helix user.</summary>
     public class User
     {
-        /// <summary>
-        /// User’s broadcaster type: "partner", "affiliate", or "".
-        /// </summary>
-        public string broadcasterType;
-
-        /// <summary>
-        /// User’s channel description.
-        /// </summary>
-        public string description;
-
-        /// <summary>
-        /// User’s display name.
-        /// </summary>
-        public string displayName;
-
-        /// <summary>
-        /// User’s ID.
-        /// </summary>
-        public string id;
-
-        /// <summary>
-        /// User’s login name.
-        /// </summary>
-        public string login;
-
-        /// <summary>
-        /// URL of the user’s offline image.
-        /// </summary>
-        public string offlineImageURL;
-
-        /// <summary>
-        /// URL of the user’s profile image.
-        /// </summary>
-        public string profileImageURL;
-
-        /// <summary>
-        /// User’s type: "staff", "admin", "global_mod", or "".
-        /// </summary>
-        public string type;
-
-        /// <summary>
-        /// Total number of views of the user’s channel.
-        /// </summary>
-        public int viewCount;
-
-        /// <summary>
-        /// User’s verified email address. Returned if the request includes the user:read:email scope.
-        /// </summary>
-        public string email;
-
-        /// <summary>
-        /// Date when the user was created.
-        /// </summary>
-        public string createdAt;
-
-        public static User Factory(JSONNode node)
+        [JsonConstructor]
+        public User(
+            [JsonProperty("id")] string id,
+            [JsonProperty("login")] string login,
+            [JsonProperty("display_name")] string displayName,
+            [JsonProperty("type")] string type,
+            [JsonProperty("broadcaster_type")] string broadcasterType,
+            [JsonProperty("description")] string description,
+            [JsonProperty("profile_image_url")] string profileImageUrl,
+            [JsonProperty("offline_image_url")] string offlineImageUrl,
+            [JsonProperty("view_count")] int viewCount,
+            [JsonProperty("email")] string email,
+            [JsonProperty("created_at")] DateTime createdAt
+        )
         {
-            return new User
-            {
-                broadcasterType = node["broadcaster_type"].Value,
-                description = node["description"].Value,
-                displayName = node["display_name"].Value,
-                id = node["id"].Value,
-                login = node["login"].Value,
-                offlineImageURL = node["offline_image_url"].Value,
-                profileImageURL = node["profile_image_url"].Value,
-                type = node["type"].Value,
-                viewCount = node["view_count"].AsInt,
-                email = node["email"].Value,
-                createdAt = node["created_at"].Value
-            };
+            this.Id = id;
+            this.Login = login;
+            this.DisplayName = displayName;
+            this.Type = type;
+            this.BroadcasterType = broadcasterType;
+            this.Description = description;
+            this.ProfileImageUrl = profileImageUrl;
+            this.OfflineImageUrl = offlineImageUrl;
+            this.ViewCount = viewCount;
+            this.Email = email;
+            this.CreatedAt = createdAt;
         }
+
+        [JsonProperty("id")]
+        public string Id { get; }
+
+        [JsonProperty("login")]
+        public string Login { get; }
+
+        [JsonProperty("display_name")]
+        public string DisplayName { get; }
+
+        [JsonProperty("type")]
+        public string Type { get; }
+
+        [JsonProperty("broadcaster_type")]
+        public string BroadcasterType { get; }
+
+        [JsonProperty("description")]
+        public string Description { get; }
+
+        [JsonProperty("profile_image_url")]
+        public string ProfileImageUrl { get; }
+
+        [JsonProperty("offline_image_url")]
+        public string OfflineImageUrl { get; }
+
+        [JsonProperty("view_count")]
+        public int ViewCount { get; }
+
+        [JsonProperty("email")]
+        public string Email { get; }
+
+        [JsonProperty("created_at")]
+        public DateTime CreatedAt { get; }
     }
 }
-
-

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using SimpleJSON;
 using System.Net;
 
 namespace ValheimTwitch.Twitch
@@ -44,11 +43,7 @@ namespace ValheimTwitch.Twitch
 
             var users = JsonConvert.DeserializeObject<Helix.Users>(json);
 
-            Log.Info(">>>>>>" + users.Data[0].DisplayName);
-
-            JSONNode node = JSON.Parse(json);
-
-            user = Helix.User.Factory(node["data"][0]);
+            user = users.Data[0];
 
             return user;
         }

@@ -218,15 +218,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="GameClasses\FejdStartupPatch.cs" />
-    <Compile Include="Twitch\Helix\Users.cs" />
-    <Compile Include="Twitch\PubSub.cs" />
-    <Compile Include="Twitch\Client.cs" />
-    <Compile Include="Vendor\SimpleJSON.cs" />
-    <Compile Include="Twitch\Credentials.cs" />
+    <Compile Include="Twitch\PubSub\Client.cs" />
     <Compile Include="Twitch\Helix\User.cs" />
+    <Compile Include="Twitch\Helix\Users.cs" />
+    <Compile Include="Twitch\Client.cs" />
+    <Compile Include="Twitch\Credentials.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Twitch\PubSub\Messages\RewardRedeem.cs" />
+    <Compile Include="Twitch\PubSub\Messages\Message.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -242,6 +243,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "F:\Jeux\steamapps\common\Valheim\BepInEx\plugins\ValheimTwitch\$(TargetFileName)"</PostBuildEvent>
