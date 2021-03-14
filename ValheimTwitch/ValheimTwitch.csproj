@@ -101,112 +101,194 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AccessibilityModule">
       <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.AccessibilityModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.AIModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.AIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AndroidJNIModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.AndroidJNIModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.AndroidJNIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ARModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.ARModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AudioModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.AudioModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ClothModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.ClothModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterInputModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.ClusterInputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterRendererModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.ClusterRendererModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.CrashReportingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.DirectorModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.DirectorModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DSPGraphModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.DSPGraphModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.GameCenterModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.GridModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.GridModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HotReloadModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.HotReloadModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.InputModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.JSONSerializeModule">
       <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.JSONSerializeModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.LocalizationModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.LocalizationModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.PerformanceReportingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Physics2DModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.Physics2DModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ProfilerModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.ProfilerModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ScreenCaptureModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.ScreenCaptureModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SharedInternalsModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StreamingModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.StreamingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubstanceModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.SubstanceModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SubsystemsModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.SubsystemsModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.SubsystemsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TerrainModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.TerrainModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.TextCoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\libs\UnityEngine.TextRenderingModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TilemapModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.TilemapModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TLSModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.TLSModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UIElementsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UmbraModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UmbraModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UNETModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityAnalyticsModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityTestProtocolModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.VehiclesModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VFXModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.VFXModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.VFXModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VideoModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.VideoModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VRModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.VRModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.WindModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.XRModule">
-      <HintPath>F:\Jeux\steamapps\common\Valheim\valheim_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+      <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.XRModule.dll</HintPath>
     </Reference>
     <Reference Include="websocket-sharp, Version=1.0.2.32519, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocketSharp-NonPreRelease.1.0.0\lib\net35\websocket-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\EmbeddedAsset.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -243,7 +325,11 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\TwitchLogo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "F:\Jeux\steamapps\common\Valheim\BepInEx\plugins\ValheimTwitch\$(TargetFileName)"</PostBuildEvent>

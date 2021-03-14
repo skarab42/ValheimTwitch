@@ -1,8 +1,9 @@
-﻿using HarmonyLib;
-using System;
+﻿using BepInEx;
+using HarmonyLib;
+using System.IO;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using ValheimTwitch.Helpers;
 
 namespace ValheimTwitch
 {
@@ -18,18 +19,23 @@ namespace ValheimTwitch
             go.transform.SetParent(parent.transform);
 
             go.AddComponent<CanvasRenderer>();
-            go.transform.localPosition = new Vector3(120, 0, 0);
+            go.transform.localPosition = new Vector3(150, 0, 0);
 
             var rect = go.AddComponent<RectTransform>();
 
-            rect.sizeDelta = new Vector2(200, 80);
+            rect.sizeDelta = new Vector2(250, 100);
             rect.anchorMax = new Vector2(0.0f, 0.5f); // top right
             rect.anchorMin = new Vector2(0.0f, 0.5f); // bottom left
 
             var image = go.AddComponent<Image>();
             var button = go.AddComponent<Button>();
 
-            image.color = new Color32(140, 69, 247, 200);
+            Stream logoStream = EmbeddedAsset.LoadEmbeddedAsset("Assets.TwitchLogo.png");
+            Texture2D logoTexture = EmbeddedAsset.LoadPng(logoStream);
+            var sprite = Sprite.Create(logoTexture, new Rect(0, 0, logoTexture.width, logoTexture.height), new Vector2(0.5f, 0.5f));
+            logoStream.Dispose();
+
+            image.sprite = sprite;
 
             var goText = new GameObject($"{Plugin.LABEL}InfoText");
 
@@ -39,11 +45,12 @@ namespace ValheimTwitch
             goText.AddComponent<CanvasRenderer>();
             var textRect = goText.AddComponent<RectTransform>();
 
-            textRect.sizeDelta = rect.sizeDelta - new Vector2(20, 20);
+            textRect.sizeDelta = rect.sizeDelta - new Vector2(110, 20);
+            textRect.transform.localPosition = new Vector3(50, 0, 0);
 
             var text = goText.AddComponent<Text>();
 
-            text.font = Font.CreateDynamicFontFromOSFont("Arial", 14);
+            text.font = Font.CreateDynamicFontFromOSFont("Arial", 10);
             text.alignment = TextAnchor.MiddleCenter;
             text.resizeTextForBestFit = true;
             text.color = Color.white;
