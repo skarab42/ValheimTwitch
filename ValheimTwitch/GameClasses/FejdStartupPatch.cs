@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ValheimTwitch
@@ -10,37 +12,58 @@ namespace ValheimTwitch
         public static void Postfix(FejdStartup __instance)
         {
             var pluginInstance = Plugin.Instance;
+            var go = new GameObject($"{Plugin.LABEL}Info");
             var parent = __instance.m_versionLabel.transform.parent.gameObject;
-            var bepinGo = new GameObject($"{Plugin.LABEL}Info");
 
-            bepinGo.transform.parent = parent.transform;
+            go.transform.SetParent(parent.transform);
 
-            bepinGo.AddComponent<CanvasRenderer>();
-            bepinGo.transform.localPosition = Vector3.zero;
+            go.AddComponent<CanvasRenderer>();
+            go.transform.localPosition = new Vector3(120, 0, 0);
 
-            bepinGo.transform.localPosition = new Vector3(0.0f, -100.0f, 0.0f);
+            var rect = go.AddComponent<RectTransform>();
 
-            var rt = bepinGo.AddComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(200, 80);
+            rect.anchorMax = new Vector2(0.0f, 0.5f); // top right
+            rect.anchorMin = new Vector2(0.0f, 0.5f); // bottom left
 
-            rt.anchorMax = new Vector2(0.3f, 0.95f);  // top left
-            rt.anchorMin = new Vector2(0.03f, 0.95f); // bottom rigth
+            var image = go.AddComponent<Image>();
+            var button = go.AddComponent<Button>();
 
-            var text = bepinGo.AddComponent<Text>();
-            text.font = Font.CreateDynamicFontFromOSFont("Arial", 20);
+            image.color = new Color32(140, 69, 247, 200);
 
-            var user = pluginInstance.twitchClient.user;
+            var goText = new GameObject($"{Plugin.LABEL}InfoText");
 
-            if (user == null)
+            goText.transform.SetParent(go.transform);
+            goText.transform.localPosition = Vector3.zero;
+
+            goText.AddComponent<CanvasRenderer>();
+            var textRect = goText.AddComponent<RectTransform>();
+
+            textRect.sizeDelta = rect.sizeDelta - new Vector2(20, 20);
+
+            var text = goText.AddComponent<Text>();
+
+            text.font = Font.CreateDynamicFontFromOSFont("Arial", 14);
+            text.alignment = TextAnchor.MiddleCenter;
+            text.resizeTextForBestFit = true;
+            text.color = Color.white;
+
+            var client = pluginInstance.twitchClient;
+
+            if (client == null || client.user == null)
             {
-                text.text = $"Valheim Twitch\nPress F7 to log-in.";
+                button.onClick.AddListener(OnButtonClick);
+                text.text = $"{Plugin.NAME}\nLogin";
             }
             else
             {
-                text.text = $"Valheim Twitch: {user.DisplayName}";
+                text.text = $"{Plugin.NAME}\n{client.user.DisplayName}";
             }
+        }
 
-            text.color = Color.white;
-            text.fontSize = 20;
+        private static void OnButtonClick()
+        {
+            Log.Info("clicked button");
         }
     }
 }

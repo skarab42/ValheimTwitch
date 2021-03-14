@@ -47,7 +47,8 @@ namespace ValheimTwitch
             if (twitchClientId.Value.Length == 0 || twitchAccessToken.Value.Length == 0)
             {
                 // TODO open custom url with tutorial or handle Twitch login direcly ?
-                Application.OpenURL(TWITCH_TOKEN_GENERATOR_URL);
+                // Application.OpenURL(TWITCH_TOKEN_GENERATOR_URL);
+                Log.Info("Show Twitch login link...");
             }
             else
             {
