@@ -124,9 +124,7 @@ namespace ValheimTwitch.Twitch.Auth
 
             var aResponse = JsonConvert.DeserializeObject<AbstractResponse>(json);
 
-            var response = aResponse as Response;
-
-            if (response != null)
+            if (aResponse is Response response)
             {
                 var message = $"Error {response.Status}: {response.Message}";
 

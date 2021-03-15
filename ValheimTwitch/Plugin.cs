@@ -2,13 +2,14 @@
 using BepInEx.Configuration;
 using HarmonyLib;
 using System;
+using ValheimTwitch.Twitch.Auth;
 
 namespace ValheimTwitch
 {
     [BepInPlugin(GUID, NAME, VERSION)]
     public class Plugin : BaseUnityPlugin
     {
-        public const string GUID = "dev.skarab42.valheim_twitch";
+        public const string GUID = "dev.skarab42.valheim.twitch";
         public const string NAME = "Valheim Twitch";
         public const string LABEL = "ValheimTwitch";
         public const string VERSION = "0.1.0";
@@ -22,7 +23,6 @@ namespace ValheimTwitch
             "channel:read:redemptions"
         };
 
-        public ConfigEntry<string> twitchClientId;
         public ConfigEntry<string> twitchAccessToken;
 
         public Twitch.API.Client twitchClient;
@@ -47,38 +47,36 @@ namespace ValheimTwitch
 
             instance = this;
 
-            twitchClientId = Config.Bind("Twitch", "ClientId", "", "Twitch client ID");
             twitchAccessToken = Config.Bind("Twitch", "AccessToken", "", "Twitch access token");
 
-            if (twitchClientId.Value.Length == 0 || twitchAccessToken.Value.Length == 0)
+            if (twitchAccessToken.Value.Length != 0)
             {
-                // TODO open custom url with tutorial or handle Twitch login direcly ?
-                // Application.OpenURL(TWITCH_TOKEN_GENERATOR_URL);
-                Log.Info("Show Twitch login link...");
-            }
-            else
-            {
-                try
-                {
-                    twitchClient = new Twitch.API.Client(twitchClientId.Value, twitchAccessToken.Value);
-                    twitchPubSubClient = new Twitch.PubSub.Client(twitchClient);
-
-                    Twitch.API.Helix.User user = twitchClient.GetUser();
-                    Log.Info($"Twitch User: {user.Login}");
-
-                    twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
-                    twitchPubSubClient.OnMaxReconnect += OnMaxReconnect;
-                    twitchPubSubClient.Connect();
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Twitch User: {e.Message}");
-                    // TODO open custom url with how to setup
-                }
+                TwitchLogin();
             }
 
             Harmony harmony = new Harmony(GUID);
             harmony.PatchAll();
+        }
+
+        private void TwitchLogin()
+        {
+            try
+            {
+                twitchClient = new Twitch.API.Client(TWITCH_APP_CLIENT_ID, twitchAccessToken.Value);
+                twitchPubSubClient = new Twitch.PubSub.Client(twitchClient);
+
+                Twitch.API.Helix.User user = twitchClient.GetUser();
+                Log.Info($"Twitch User: {user.Login}");
+
+                twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
+                twitchPubSubClient.OnMaxReconnect += OnMaxReconnect;
+
+                twitchPubSubClient.Connect();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error: {e.Message}");
+            }
         }
 
         private void OnMaxReconnect(object sender, Twitch.PubSub.MaxReconnectErrorArgs e)
@@ -89,6 +87,15 @@ namespace ValheimTwitch
         private void OnRewardRedeemed(object sender, Twitch.PubSub.RewardRedeemedArgs e)
         {
             Log.Info($"OnRewardRedeemed: {e.Redemption.Reward.Title}");
+        }
+
+        internal void OnAuthToken(Token token)
+        {
+            twitchAccessToken.Value = token.AccessToken;
+
+            TwitchLogin();
+
+            FejdStartupPatch.UpdateText();
         }
     }
 }

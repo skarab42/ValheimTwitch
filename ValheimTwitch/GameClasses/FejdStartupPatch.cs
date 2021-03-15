@@ -1,5 +1,5 @@
-﻿using HarmonyLib;
-using System;
+﻿using BepInEx.Configuration;
+using HarmonyLib;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,9 +11,11 @@ namespace ValheimTwitch
     [HarmonyPatch(typeof(FejdStartup), "Start")]
     public static class FejdStartupPatch
     {
+        private static Text text;
+        private static Button button;
+
         public static void Postfix(FejdStartup __instance)
         {
-            var pluginInstance = Plugin.Instance;
             var go = new GameObject($"{Plugin.LABEL}Info");
             var parent = __instance.m_versionLabel.transform.parent.gameObject;
 
@@ -29,7 +31,8 @@ namespace ValheimTwitch
             rect.anchorMin = new Vector2(0.0f, 0.5f); // bottom left
 
             var image = go.AddComponent<Image>();
-            var button = go.AddComponent<Button>();
+
+            button = go.AddComponent<Button>();
 
             Stream logoStream = EmbeddedAsset.LoadEmbeddedAsset("Assets.TwitchLogo.png");
             Texture2D logoTexture = EmbeddedAsset.LoadPng(logoStream);
@@ -49,14 +52,19 @@ namespace ValheimTwitch
             textRect.sizeDelta = rect.sizeDelta - new Vector2(110, 20);
             textRect.transform.localPosition = new Vector3(50, 0, 0);
 
-            var text = goText.AddComponent<Text>();
+            text = goText.AddComponent<Text>();
 
             text.font = Font.CreateDynamicFontFromOSFont("Arial", 10);
             text.alignment = TextAnchor.MiddleCenter;
             text.resizeTextForBestFit = true;
             text.color = Color.white;
 
-            var client = pluginInstance.twitchClient;
+            UpdateText();
+        }
+
+        public static void UpdateText()
+        {
+            var client = Plugin.Instance.twitchClient;
 
             if (client == null || client.user == null)
             {
@@ -66,6 +74,7 @@ namespace ValheimTwitch
             else
             {
                 text.text = $"{Plugin.NAME}\n{client.user.DisplayName}";
+                button.onClick.RemoveListener(OnButtonClick);
             }
         }
 
@@ -87,7 +96,7 @@ namespace ValheimTwitch
         {
             if (e.Error == null)
             {
-                Log.Info($"OnAuthToken: {e.Token.AccessToken}");
+                Plugin.Instance.OnAuthToken(e.Token);
             }
             else
             {
