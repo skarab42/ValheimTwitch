@@ -49,8 +49,8 @@ namespace ValheimTwitch
             goText.AddComponent<CanvasRenderer>();
             var textRect = goText.AddComponent<RectTransform>();
 
-            textRect.sizeDelta = rect.sizeDelta - new Vector2(110, 20);
-            textRect.transform.localPosition = new Vector3(50, 0, 0);
+            textRect.sizeDelta = rect.sizeDelta - new Vector2(80, 30);
+            textRect.transform.localPosition = new Vector3(30, -20, 0);
 
             text = goText.AddComponent<Text>();
 
@@ -68,12 +68,12 @@ namespace ValheimTwitch
 
             if (client == null || client.user == null)
             {
-                text.text = $"{Plugin.NAME}\nLogin";
+                text.text = "Connexion";
                 button.onClick.AddListener(OnButtonClick);
             }
             else
             {
-                text.text = $"{Plugin.NAME}\n{client.user.DisplayName}";
+                text.text = client.user.DisplayName;
                 button.onClick.RemoveListener(OnButtonClick);
             }
         }

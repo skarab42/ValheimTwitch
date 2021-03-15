@@ -21,7 +21,7 @@ namespace ValheimTwitch.Helpers
 
         public static Texture2D LoadPng(Stream fileStream)
         {
-            UnityEngine.Texture2D texture = null;
+            Texture2D texture = null;
 
             if (fileStream != null)
             {
