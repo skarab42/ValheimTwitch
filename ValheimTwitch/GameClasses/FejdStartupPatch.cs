@@ -11,13 +11,23 @@ namespace ValheimTwitch
     [HarmonyPatch(typeof(FejdStartup), "Start")]
     public static class FejdStartupPatch
     {
-        private static Text text;
-        private static Button button;
+        private static Button mainButton;
+        private static Text mainButtonText;
+
+        private static GameObject goMainButton;
+        private static GameObject goSettingsUI;
 
         public static void Postfix(FejdStartup __instance)
         {
-            var go = new GameObject($"{Plugin.LABEL}Info");
             var parent = __instance.m_versionLabel.transform.parent.gameObject;
+
+            goMainButton = CreateMainButton(parent);
+            goSettingsUI = CreateSettingsPanel(parent);
+        }
+
+        public static GameObject CreateMainButton(GameObject parent)
+        {
+            var go = new GameObject($"{Plugin.LABEL}MainButton");
 
             go.transform.SetParent(parent.transform);
 
@@ -32,14 +42,14 @@ namespace ValheimTwitch
 
             var image = go.AddComponent<Image>();
 
-            button = go.AddComponent<Button>();
+            mainButton = go.AddComponent<Button>();
 
             Texture2D logoTexture = EmbeddedAsset.LoadTexture2D("Assets.TwitchLogo.png");
             var sprite = Sprite.Create(logoTexture, new Rect(0, 0, logoTexture.width, logoTexture.height), new Vector2(0.5f, 0.5f));
 
             image.sprite = sprite;
 
-            var goText = new GameObject($"{Plugin.LABEL}InfoText");
+            var goText = new GameObject($"{Plugin.LABEL}MainButtonText");
 
             goText.transform.SetParent(go.transform);
             goText.transform.localPosition = Vector3.zero;
@@ -50,14 +60,42 @@ namespace ValheimTwitch
             textRect.sizeDelta = rect.sizeDelta - new Vector2(80, 30);
             textRect.transform.localPosition = new Vector3(30, -20, 0);
 
-            text = goText.AddComponent<Text>();
+            mainButtonText = goText.AddComponent<Text>();
 
-            text.font = Font.CreateDynamicFontFromOSFont("Arial", 10);
-            text.alignment = TextAnchor.MiddleCenter;
-            text.resizeTextForBestFit = true;
-            text.color = Color.white;
+            mainButton.onClick.AddListener(OnButtonClick);
+            
+            mainButtonText.font = Font.CreateDynamicFontFromOSFont("Arial", 10);
+            mainButtonText.alignment = TextAnchor.MiddleCenter;
+            mainButtonText.resizeTextForBestFit = true;
+            mainButtonText.color = Color.white;
 
             UpdateText();
+
+            return go;
+        }
+
+        private static GameObject CreateSettingsPanel(GameObject parent)
+        {
+            var go = new GameObject($"{Plugin.LABEL}SettingsPanel");
+
+            go.transform.SetParent(parent.transform);
+            go.transform.localPosition = Vector3.zero;
+
+            go.AddComponent<CanvasRenderer>();
+
+            var rect = go.AddComponent<RectTransform>();
+
+            rect.sizeDelta = new Vector2(400, 400);
+            rect.anchorMax = new Vector2(0.25f, 0.5f);
+            rect.anchorMin = new Vector2(0.25f, 0.5f);
+
+            var image = go.AddComponent<Image>();
+
+            image.color = new Color32(0, 0, 0, 100);
+
+            go.SetActive(false);
+
+            return go;
         }
 
         public static void UpdateText()
@@ -66,18 +104,24 @@ namespace ValheimTwitch
 
             if (client == null || client.user == null)
             {
-                text.text = "Connexion";
-                button.onClick.AddListener(OnButtonClick);
+                mainButtonText.text = "Connexion";
             }
             else
             {
-                text.text = client.user.DisplayName;
-                button.onClick.RemoveListener(OnButtonClick);
+                mainButtonText.text = client.user.DisplayName;
             }
         }
 
         private static void OnButtonClick()
         {
+            var client = Plugin.Instance.twitchClient;
+
+            if (client != null && client.user != null)
+            {
+                goSettingsUI.SetActive(!goSettingsUI.activeSelf);
+                return;
+            }
+
             var provider = new Provider(
                 Plugin.TWITCH_APP_CLIENT_ID,
                 Plugin.TWITCH_REDIRECT_HOST,
