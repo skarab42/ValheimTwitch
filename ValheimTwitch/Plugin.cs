@@ -2,6 +2,7 @@
 using BepInEx.Configuration;
 using HarmonyLib;
 using System;
+using ValheimTwitch.Helpers;
 using ValheimTwitch.Twitch.Auth;
 
 namespace ValheimTwitch
@@ -36,7 +37,16 @@ namespace ValheimTwitch
             private set { instance = value; }
         }
 
-        private Plugin() { }
+        private Plugin() {
+            EmbeddedAsset.LoadAssembly("Assets.IpMatcher.dll");
+            EmbeddedAsset.LoadAssembly("Assets.netstandard.dll");
+            EmbeddedAsset.LoadAssembly("Assets.Newtonsoft.Json.dll");
+            EmbeddedAsset.LoadAssembly("Assets.RegexMatcher.dll");
+            EmbeddedAsset.LoadAssembly("Assets.System.Runtime.Serialization.dll");
+            EmbeddedAsset.LoadAssembly("Assets.UrlMatcher.dll");
+            EmbeddedAsset.LoadAssembly("Assets.WatsonWebserver.dll");
+            EmbeddedAsset.LoadAssembly("Assets.websocket-sharp.dll");
+        }
 
         public void Awake()
         {

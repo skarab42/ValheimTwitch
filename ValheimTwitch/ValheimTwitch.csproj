@@ -347,6 +347,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\websocket-sharp.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\IpMatcher.dll" />
+    <EmbeddedResource Include="Assets\netstandard.dll" />
+    <EmbeddedResource Include="Assets\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="Assets\RegexMatcher.dll" />
+    <EmbeddedResource Include="Assets\System.Runtime.Serialization.dll" />
+    <EmbeddedResource Include="Assets\UrlMatcher.dll" />
+    <EmbeddedResource Include="Assets\WatsonWebserver.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "F:\Jeux\steamapps\common\Valheim\BepInEx\plugins\ValheimTwitch\$(TargetFileName)"</PostBuildEvent>
