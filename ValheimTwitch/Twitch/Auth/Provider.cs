@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using ValheimTwitch.Twitch.Utils;
 using WatsonWebserver;
@@ -7,36 +8,62 @@ namespace ValheimTwitch.Twitch.Auth
 {
     class Provider
     {
-        private static Server server;
-        private static string state;
+        private const string AUTH_URL = "https://id.twitch.tv/oauth2/authorize";
+        private const string HTML_TEMPLATE = "<html><head><title>{0}</title></head><body>{1}</body></html>";
+        private const string SUCCESS_MESSAGE = "<p><strong>✔ Authentication successful!</strong></p><p>You can close this page.</p>";
+        private const string DENIED_MESSAGE = "<p><strong>❌ Authentication denied!</strong></p><p>{0}</p><p>You can close this page.</p>";
 
-        private static readonly string authorizeURL = "https://id.twitch.tv/oauth2/authorize";
-        
-        public static void GetCode(string clientId, string redirectURL, string scope)
+        private readonly string[] scopes;
+        private readonly string clientId;
+        private readonly string redirectHost;
+        private readonly int redirectPort;
+
+        private string state;
+        private Server server;
+
+        public Provider(string clientId, string redirectHost, int redirectPort, string[] scopes)
+        {
+            this.scopes = scopes;
+            this.clientId = clientId;
+            this.redirectHost = redirectHost;
+            this.redirectPort = redirectPort;
+        }
+
+        public void GetCode()
         {
             state = Generate.RandomString();
 
-            var url = $"{authorizeURL}?client_id={clientId}&redirect_uri={redirectURL}&scope={scope}&state={state}&response_type=code";
+            var scope = string.Join(" ", scopes);
+            var redirectURL = $"http://{redirectHost}:{redirectPort}";
+            var url = $"{AUTH_URL}?client_id={clientId}&redirect_uri={redirectURL}&scope={scope}&state={state}&response_type=code";
 
             Log.Debug($"Open --> {url}");
             Application.OpenURL(url);
 
             if (server == null)
             {
-                server = new Server(Plugin.TWITCH_REDIRECT_HOST, Plugin.TWITCH_REDIRECT_PORT, false, GetCodeRoute);
+                server = new Server(redirectHost, redirectPort, false, GetCodeRoute);
                 server.Start();
             }
         }
 
-        private static async Task GetCodeRoute(HttpContext context)
+        private static Task<bool> SendHTML(HttpContext context, string title, string body, int code)
+        {
+            context.Response.StatusCode = code;
+            context.Response.ContentType = "text/html; charset=utf-8";
+
+            return context.Response.Send(String.Format(HTML_TEMPLATE, title, body));
+        }
+
+        private async Task GetCodeRoute(HttpContext context)
         {
             if (context.Request.Query.Elements.ContainsKey("error"))
             {
-                var error = context.Request.Query.Elements["error"];
-                var description = context.Request.Query.Elements["error_description"];
+                var message = context.Request.Query.Elements["error_description"].Replace("+", " ");
 
-                context.Response.StatusCode = 401;
-                await context.Response.Send($"Error: {error}: {description}");
+                Log.Error(message);
+
+                await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, $"<i>{message}.</i>"), 401);
             }
             else if (context.Request.Query.Elements.ContainsKey("code"))
             {
@@ -45,18 +72,19 @@ namespace ValheimTwitch.Twitch.Auth
 
                 if (responseState != state)
                 {
-                    context.Response.StatusCode = 401;
-                    await context.Response.Send($"42");
+                    var message = "Invalid auth state 🤡";
+
+                    Log.Error(message);
+
+                    await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, message), 401);
                 }
                 else
                 {
-                    Log.Info($"Code: {code}");
+                    Log.Debug($"Auth code: {code}");
 
-                    context.Response.StatusCode = 200;
-                    await context.Response.Send($"Done!");
+                    await SendHTML(context, "Success", SUCCESS_MESSAGE, 200);
 
                     // https://us-central1-valheim-twitch-mod.cloudfunctions.net/getTwitchTokenFromCode
-
                 }
             }
 

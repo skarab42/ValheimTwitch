@@ -16,7 +16,11 @@ namespace ValheimTwitch
         public const string TWITCH_APP_CLIENT_ID = "5b9v1vm0jv7kx9afpmz0ylb3lp7k9w";
         public const string TWITCH_REDIRECT_HOST = "localhost";
         public const int TWITCH_REDIRECT_PORT = 42224;
-        public const string TWITCH_SCOPE = "channel:read:redemptions";
+
+        public static readonly string[] TWITCH_SCOPES = {
+            "user:read:email",
+            "channel:read:redemptions"
+        };
 
         public ConfigEntry<string> twitchClientId;
         public ConfigEntry<string> twitchAccessToken;

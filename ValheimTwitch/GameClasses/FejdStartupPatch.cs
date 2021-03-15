@@ -59,8 +59,8 @@ namespace ValheimTwitch
 
             if (client == null || client.user == null)
             {
-                button.onClick.AddListener(OnButtonClick);
                 text.text = $"{Plugin.NAME}\nLogin";
+                button.onClick.AddListener(OnButtonClick);
             }
             else
             {
@@ -70,11 +70,14 @@ namespace ValheimTwitch
 
         private static void OnButtonClick()
         {
-            var scope = Plugin.TWITCH_SCOPE;
-            var clientId = Plugin.TWITCH_APP_CLIENT_ID;
-            var redirectURL = $"http://{Plugin.TWITCH_REDIRECT_HOST}:{Plugin.TWITCH_REDIRECT_PORT}";
+            var provider = new Provider(
+                Plugin.TWITCH_APP_CLIENT_ID,
+                Plugin.TWITCH_REDIRECT_HOST,
+                Plugin.TWITCH_REDIRECT_PORT,
+                Plugin.TWITCH_SCOPES
+            );
 
-            Provider.GetCode(clientId, redirectURL, scope);
+            provider.GetCode();
         }
     }
 }
