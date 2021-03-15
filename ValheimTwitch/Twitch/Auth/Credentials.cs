@@ -1,4 +1,4 @@
-﻿namespace ValheimTwitch.Twitch
+﻿namespace ValheimTwitch.Twitch.Auth
 {
     public class Credentials
     {

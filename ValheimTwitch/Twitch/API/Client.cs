@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
+using ValheimTwitch.Twitch.Auth;
 
 namespace ValheimTwitch.Twitch.API
 {
-    /// <summary>
-    /// Twitch API client.
-    /// </summary>
     public class Client
     {
         public Helix.User user;

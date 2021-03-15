@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ValheimTwitch</RootNamespace>
     <AssemblyName>ValheimTwitch</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -71,6 +71,9 @@
     <Reference Include="BepInEx.Preloader">
       <HintPath>F:\Jeux\steamapps\common\Valheim\BepInEx\core\BepInEx.Preloader.dll</HintPath>
     </Reference>
+    <Reference Include="IpMatcher, Version=1.0.4.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IpMatcher.1.0.4.1\lib\net452\IpMatcher.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil, Version=0.11.3.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Cecil.0.11.3\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -89,8 +92,11 @@
     <Reference Include="MonoMod.Utils, Version=21.3.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoMod.Utils.21.3.1.1\lib\net40\MonoMod.Utils.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Json.Net.Unity3D.9.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RegexMatcher, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RegexMatcher.1.0.7\lib\netstandard2.0\RegexMatcher.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -283,11 +289,18 @@
     <Reference Include="UnityEngine.XRModule">
       <HintPath>F:\Jeux\steamapps\common\Valheim\unstripped_corlib\UnityEngine.XRModule.dll</HintPath>
     </Reference>
+    <Reference Include="UrlMatcher, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UrlMatcher.1.0.0.1\lib\net452\UrlMatcher.dll</HintPath>
+    </Reference>
+    <Reference Include="WatsonWebserver, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Watson.4.1.2\lib\netstandard2.0\WatsonWebserver.dll</HintPath>
+    </Reference>
     <Reference Include="websocket-sharp, Version=1.0.2.32519, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocketSharp-NonPreRelease.1.0.0\lib\net35\websocket-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Twitch\Utils\Generate.cs" />
     <Compile Include="Helpers\EmbeddedAsset.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -300,11 +313,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="GameClasses\FejdStartupPatch.cs" />
+    <Compile Include="Twitch\Auth\Provider.cs" />
     <Compile Include="Twitch\PubSub\Client.cs" />
     <Compile Include="Twitch\API\Helix\User.cs" />
     <Compile Include="Twitch\API\Helix\Users.cs" />
     <Compile Include="Twitch\API\Client.cs" />
-    <Compile Include="Twitch\Credentials.cs" />
+    <Compile Include="Twitch\Auth\Credentials.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

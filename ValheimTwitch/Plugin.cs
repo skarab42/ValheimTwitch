@@ -2,7 +2,6 @@
 using BepInEx.Configuration;
 using HarmonyLib;
 using System;
-using UnityEngine;
 
 namespace ValheimTwitch
 {
@@ -14,7 +13,10 @@ namespace ValheimTwitch
         public const string LABEL = "ValheimTwitch";
         public const string VERSION = "0.1.0";
 
-        public const string TWITCH_TOKEN_GENERATOR_URL = "https://twitchtokengenerator.com";
+        public const string TWITCH_APP_CLIENT_ID = "5b9v1vm0jv7kx9afpmz0ylb3lp7k9w";
+        public const string TWITCH_REDIRECT_HOST = "localhost";
+        public const int TWITCH_REDIRECT_PORT = 42224;
+        public const string TWITCH_SCOPE = "channel:read:redemptions";
 
         public ConfigEntry<string> twitchClientId;
         public ConfigEntry<string> twitchAccessToken;

@@ -1,9 +1,9 @@
-﻿using BepInEx;
-using HarmonyLib;
+﻿using HarmonyLib;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using ValheimTwitch.Helpers;
+using ValheimTwitch.Twitch.Auth;
 
 namespace ValheimTwitch
 {
@@ -70,7 +70,11 @@ namespace ValheimTwitch
 
         private static void OnButtonClick()
         {
-            Log.Info("clicked button");
+            var scope = Plugin.TWITCH_SCOPE;
+            var clientId = Plugin.TWITCH_APP_CLIENT_ID;
+            var redirectURL = $"http://{Plugin.TWITCH_REDIRECT_HOST}:{Plugin.TWITCH_REDIRECT_PORT}";
+
+            Provider.GetCode(clientId, redirectURL, scope);
         }
     }
 }

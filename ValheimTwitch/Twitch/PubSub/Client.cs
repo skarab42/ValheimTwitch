@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Timers;
+using ValheimTwitch.Twitch.Auth;
 using WebSocketSharp;
 
 namespace ValheimTwitch.Twitch.PubSub
@@ -18,9 +19,6 @@ namespace ValheimTwitch.Twitch.PubSub
     public delegate void RewardRedeemedHandler(object sender, RewardRedeemedArgs e);
     public delegate void MaxReconnectErrorHandler(object sender, MaxReconnectErrorArgs e);
 
-    /// <summary>
-    /// Twitch PubSub client.
-    /// </summary>
     public class Client
     {
         public API.Client client;
