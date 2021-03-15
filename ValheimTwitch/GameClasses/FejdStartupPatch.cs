@@ -78,14 +78,21 @@ namespace ValheimTwitch
                 Plugin.TWITCH_SCOPES
             );
 
-            provider.OnAuthCode += OnAuthCode;
+            provider.OnAuthToken += OnAuthToken;
 
             provider.GetCode();
         }
 
-        private static void OnAuthCode(object sender, AuthCodeArgs e)
+        private static void OnAuthToken(object sender, AuthTokenArgs e)
         {
-            Log.Info($"-----> {e.Code}");
+            if (e.Error == null)
+            {
+                Log.Info($"OnAuthToken: {e.Token.AccessToken}");
+            }
+            else
+            {
+                Log.Error($"OnAuthToken: {e.Error}");
+            }
         }
     }
 }

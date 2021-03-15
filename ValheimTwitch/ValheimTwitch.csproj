@@ -300,6 +300,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Twitch\Auth\Token.cs" />
     <Compile Include="Twitch\Utils\Generate.cs" />
     <Compile Include="Helpers\EmbeddedAsset.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

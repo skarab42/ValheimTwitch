@@ -52,6 +52,7 @@ namespace ValheimTwitch.Twitch.PubSub.Messages
             throw new NotImplementedException();
         }
     }
+
     public abstract class AbstractMessage
     {
         [JsonProperty("type")]

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Net;
 using System.Threading.Tasks;
 using UnityEngine;
 using ValheimTwitch.Twitch.Utils;
@@ -12,13 +14,23 @@ namespace ValheimTwitch.Twitch.Auth
         public string Error { get; set; }
     }
 
+    public class AuthTokenArgs : EventArgs
+    {
+        public Token Token { get; set; }
+        public string Error { get; set; }
+    }
+
     public delegate void AuthCodeHandler(object sender, AuthCodeArgs e);
+    public delegate void AuthTokenHandler(object sender, AuthTokenArgs e);
 
     class Provider
     {
         public event AuthCodeHandler OnAuthCode;
-        
+        public event AuthTokenHandler OnAuthToken;
+
         private const string AUTH_URL = "https://id.twitch.tv/oauth2/authorize";
+        private const string FIREBASE_URL = "https://us-central1-valheim-twitch-mod.cloudfunctions.net/getTwitchTokenFromCode";
+
         private const string HTML_TEMPLATE = "<html><head><title>{0}</title></head><body>{1}</body></html>";
         private const string SUCCESS_MESSAGE = "<p><strong>✔ Authentication successful!</strong></p><p>You can close this page.</p>";
         private const string DENIED_MESSAGE = "<p><strong>❌ Authentication denied!</strong></p><p>{0}</p><p>You can close this page.</p>";
@@ -30,6 +42,8 @@ namespace ValheimTwitch.Twitch.Auth
 
         private string state;
         private Server server;
+
+        private readonly WebClient client = new WebClient();
 
         public Provider(string clientId, string redirectHost, int redirectPort, string[] scopes)
         {
@@ -47,7 +61,6 @@ namespace ValheimTwitch.Twitch.Auth
             var redirectURL = $"http://{redirectHost}:{redirectPort}";
             var url = $"{AUTH_URL}?client_id={clientId}&redirect_uri={redirectURL}&scope={scope}&state={state}&response_type=code";
 
-            Log.Debug($"Open --> {url}");
             Application.OpenURL(url);
 
             if (server == null)
@@ -71,9 +84,8 @@ namespace ValheimTwitch.Twitch.Auth
             {
                 var message = context.Request.Query.Elements["error_description"].Replace("+", " ");
 
-                Log.Error(message);
-
                 OnAuthCode?.Invoke(this, new AuthCodeArgs { Error = message });
+                OnAuthToken?.Invoke(this, new AuthTokenArgs { Error = message });
 
                 await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, $"<i>{message}.</i>"), 401);
             }
@@ -86,16 +98,13 @@ namespace ValheimTwitch.Twitch.Auth
                 {
                     var message = "Invalid auth state 🤡";
 
-                    Log.Error(message);
-
                     OnAuthCode?.Invoke(this, new AuthCodeArgs { Error = message });
+                    OnAuthToken?.Invoke(this, new AuthTokenArgs { Error = message });
 
                     await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, message), 401);
                 }
                 else
                 {
-                    Log.Debug($"Auth code: {code}");
-
                     OnAuthCodeSuccess(code);
 
                     OnAuthCode?.Invoke(this, new AuthCodeArgs { Code = code });
@@ -110,9 +119,25 @@ namespace ValheimTwitch.Twitch.Auth
 
         private void OnAuthCodeSuccess(string code)
         {
-            var url = "https://us-central1-valheim-twitch-mod.cloudfunctions.net/getTwitchTokenFromCode";
+            var url = $"{FIREBASE_URL}?code={code}";
+            var json = client.DownloadString(url);
 
-            Log.Info($"-----> {url}?code={code}");
+            var aResponse = JsonConvert.DeserializeObject<AbstractResponse>(json);
+
+            var response = aResponse as Response;
+
+            if (response != null)
+            {
+                var message = $"Error {response.Status}: {response.Message}";
+
+                OnAuthToken?.Invoke(this, new AuthTokenArgs { Error = message });
+            }
+            else
+            {
+                var token = aResponse as Token;
+
+                OnAuthToken?.Invoke(this, new AuthTokenArgs { Token = token });
+            }
         }
     }
 }
