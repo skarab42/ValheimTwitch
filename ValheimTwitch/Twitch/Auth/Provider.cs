@@ -43,8 +43,6 @@ namespace ValheimTwitch.Twitch.Auth
         private string state;
         private Server server;
 
-        private readonly WebClient client = new WebClient();
-
         public Provider(string clientId, string redirectHost, int redirectPort, string[] scopes)
         {
             this.scopes = scopes;
@@ -119,22 +117,25 @@ namespace ValheimTwitch.Twitch.Auth
 
         private void OnAuthCodeSuccess(string code)
         {
-            var url = $"{FIREBASE_URL}?code={code}";
-            var json = client.DownloadString(url);
-
-            var aResponse = JsonConvert.DeserializeObject<AbstractResponse>(json);
-
-            if (aResponse is Response response)
+            using (WebClient client = new WebClient())
             {
-                var message = $"Error {response.Status}: {response.Message}";
+                var url = $"{FIREBASE_URL}?code={code}";
+                var json = client.DownloadString(url);
 
-                OnAuthToken?.Invoke(this, new AuthTokenArgs { Error = message });
-            }
-            else
-            {
-                var token = aResponse as Token;
+                var aResponse = JsonConvert.DeserializeObject<AbstractResponse>(json);
 
-                OnAuthToken?.Invoke(this, new AuthTokenArgs { Token = token });
+                if (aResponse is Response response)
+                {
+                    var message = $"Error {response.Status}: {response.Message}";
+
+                    OnAuthToken?.Invoke(this, new AuthTokenArgs { Error = message });
+                }
+                else
+                {
+                    var token = aResponse as Token;
+
+                    OnAuthToken?.Invoke(this, new AuthTokenArgs { Token = token });
+                }
             }
         }
     }
