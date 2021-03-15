@@ -5,9 +5,19 @@ using ValheimTwitch.Twitch.Utils;
 using WatsonWebserver;
 
 namespace ValheimTwitch.Twitch.Auth
-{
+{ 
+    public class AuthCodeArgs : EventArgs
+    {
+        public string Code { get; set; }
+        public string Error { get; set; }
+    }
+
+    public delegate void AuthCodeHandler(object sender, AuthCodeArgs e);
+
     class Provider
     {
+        public event AuthCodeHandler OnAuthCode;
+        
         private const string AUTH_URL = "https://id.twitch.tv/oauth2/authorize";
         private const string HTML_TEMPLATE = "<html><head><title>{0}</title></head><body>{1}</body></html>";
         private const string SUCCESS_MESSAGE = "<p><strong>✔ Authentication successful!</strong></p><p>You can close this page.</p>";
@@ -63,6 +73,8 @@ namespace ValheimTwitch.Twitch.Auth
 
                 Log.Error(message);
 
+                OnAuthCode?.Invoke(this, new AuthCodeArgs { Error = message });
+
                 await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, $"<i>{message}.</i>"), 401);
             }
             else if (context.Request.Query.Elements.ContainsKey("code"))
@@ -76,20 +88,31 @@ namespace ValheimTwitch.Twitch.Auth
 
                     Log.Error(message);
 
+                    OnAuthCode?.Invoke(this, new AuthCodeArgs { Error = message });
+
                     await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, message), 401);
                 }
                 else
                 {
                     Log.Debug($"Auth code: {code}");
 
-                    await SendHTML(context, "Success", SUCCESS_MESSAGE, 200);
+                    OnAuthCodeSuccess(code);
 
-                    // https://us-central1-valheim-twitch-mod.cloudfunctions.net/getTwitchTokenFromCode
+                    OnAuthCode?.Invoke(this, new AuthCodeArgs { Code = code });
+
+                    await SendHTML(context, "Success", SUCCESS_MESSAGE, 200);
                 }
             }
 
             server.Stop();
             server = null;
+        }
+
+        private void OnAuthCodeSuccess(string code)
+        {
+            var url = "https://us-central1-valheim-twitch-mod.cloudfunctions.net/getTwitchTokenFromCode";
+
+            Log.Info($"-----> {url}?code={code}");
         }
     }
 }

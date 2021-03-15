@@ -11,6 +11,7 @@ namespace ValheimTwitch.Twitch.PubSub
     {
         public Messages.Redemption Redemption { get; set; }
     }
+
     public class MaxReconnectErrorArgs : EventArgs
     {
         public string Message { get; set; }

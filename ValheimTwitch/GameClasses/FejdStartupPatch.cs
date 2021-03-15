@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -77,7 +78,14 @@ namespace ValheimTwitch
                 Plugin.TWITCH_SCOPES
             );
 
+            provider.OnAuthCode += OnAuthCode;
+
             provider.GetCode();
+        }
+
+        private static void OnAuthCode(object sender, AuthCodeArgs e)
+        {
+            Log.Info($"-----> {e.Code}");
         }
     }
 }
