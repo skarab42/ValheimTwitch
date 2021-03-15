@@ -66,7 +66,14 @@ namespace ValheimTwitch
                 twitchPubSubClient = new Twitch.PubSub.Client(twitchClient);
 
                 Twitch.API.Helix.User user = twitchClient.GetUser();
+                Twitch.API.Helix.Rewards rewards = twitchClient.GetRewards();
+
                 Log.Info($"Twitch User: {user.Login}");
+                
+                foreach (Twitch.API.Helix.Reward reward in rewards.Data)
+                {
+                    Log.Info($"Reward: {reward.Title}");
+                }
 
                 twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
                 twitchPubSubClient.OnMaxReconnect += OnMaxReconnect;

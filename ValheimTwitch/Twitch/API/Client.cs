@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Net;
 using ValheimTwitch.Twitch.Auth;
 
@@ -9,7 +10,6 @@ namespace ValheimTwitch.Twitch.API
         public Helix.User user;
 
         private readonly Credentials credentials;
-        private readonly WebClient client = new WebClient();
         private readonly string helixURL = "https://api.twitch.tv/helix";
 
         public Client(Credentials credentials)
@@ -24,10 +24,13 @@ namespace ValheimTwitch.Twitch.API
 
         public string Get(string url)
         {
-            client.Headers.Add($"Client-Id: {credentials.clientId}");
-            client.Headers.Add($"Authorization: Bearer {credentials.accessToken}");
-
-            return client.DownloadString(url);
+            using (WebClient client = new WebClient())
+            {
+                client.Headers.Add($"Client-Id: {credentials.clientId}");
+                client.Headers.Add($"Authorization: Bearer {credentials.accessToken}");
+                
+                return client.DownloadString(url);
+            }
         }
 
         public Helix.User GetUser(bool force = false)
@@ -49,6 +52,13 @@ namespace ValheimTwitch.Twitch.API
         public string GetUserAcessToken()
         {
             return credentials.accessToken;
+        }
+
+        public Helix.Rewards GetRewards()
+        {
+            string json = Get($"{helixURL}/channel_points/custom_rewards?broadcaster_id={user.Id}");
+
+            return JsonConvert.DeserializeObject<Helix.Rewards>(json);
         }
     }
 }
