@@ -34,10 +34,8 @@ namespace ValheimTwitch
 
             button = go.AddComponent<Button>();
 
-            Stream logoStream = EmbeddedAsset.LoadEmbeddedAsset("Assets.TwitchLogo.png");
-            Texture2D logoTexture = EmbeddedAsset.LoadPng(logoStream);
+            Texture2D logoTexture = EmbeddedAsset.LoadTexture2D("Assets.TwitchLogo.png");
             var sprite = Sprite.Create(logoTexture, new Rect(0, 0, logoTexture.width, logoTexture.height), new Vector2(0.5f, 0.5f));
-            logoStream.Dispose();
 
             image.sprite = sprite;
 

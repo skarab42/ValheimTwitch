@@ -19,18 +19,20 @@ namespace ValheimTwitch.Helpers
             return null;
         }
 
-        public static Texture2D LoadPng(Stream fileStream)
+        public static Texture2D LoadTexture2D(string assetPath)
         {
             Texture2D texture = null;
+            Stream fileStream = LoadEmbeddedAsset(assetPath);
 
             if (fileStream != null)
             {
                 using (var memoryStream = new MemoryStream())
                 {
-                    fileStream.CopyTo(memoryStream);
-                    
                     texture = new Texture2D(2, 2);
-                    texture.LoadImage(memoryStream.ToArray()); //This will auto-resize the texture dimensions.
+                    
+                    fileStream.CopyTo(memoryStream);
+                    texture.LoadImage(memoryStream.ToArray());
+                    fileStream.Dispose();
                 }
             }
 
