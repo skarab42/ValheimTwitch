@@ -79,11 +79,15 @@ namespace ValheimTwitch
                 Twitch.API.Helix.Rewards rewards = twitchClient.GetRewards();
 
                 Log.Info($"Twitch User: {user.Login}");
-                
-                foreach (Twitch.API.Helix.Reward reward in rewards.Data)
-                {
-                    Log.Info($"Reward: {reward.Title}");
-                }
+
+                FejdStartupPatch.rewards = rewards;
+
+                //foreach (Twitch.API.Helix.Reward reward in rewards.Data)
+                //{
+                //    Log.Info($"Reward: {reward.Title}");
+
+                //    FejdStartupPatch.AddGridItem(reward.Title, reward.BackgroundColor);
+                //}
 
                 twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
                 twitchPubSubClient.OnMaxReconnect += OnMaxReconnect;

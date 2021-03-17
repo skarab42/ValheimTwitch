@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 using ValheimTwitch.Helpers;
 using ValheimTwitch.Twitch.Auth;
@@ -12,7 +14,10 @@ namespace ValheimTwitch
         private static Button mainButton;
         private static Text mainButtonText;
         private static Scrollbar scrollbar;
+        private static GridLayoutGroup grid;
         private static GameObject goSettingsUI;
+
+        public static Twitch.API.Helix.Rewards rewards;
 
         private static readonly int gridCols = 3;
         private static readonly int gridWidth = 380;
@@ -230,46 +235,23 @@ namespace ValheimTwitch
             rect.anchorMin = new Vector2(0f, 0f);
             rect.anchorMax = new Vector2(1f, 1f);
 
-            var grid = go.AddComponent<GridLayoutGroup>();
+            grid = go.AddComponent<GridLayoutGroup>();
 
             grid.constraint = GridLayoutGroup.Constraint.Flexible;
             grid.padding = new RectOffset(20, 20, 20, 20);
             grid.spacing = new Vector2(20, 20);
 
-            AddGridItem(grid, "Image1", "#ff0000");
-            AddGridItem(grid, "Image2", "#00ff00");
-            AddGridItem(grid, "Image3", "#0000ff");
-            AddGridItem(grid, "Image4", "#ffff00");
-            AddGridItem(grid, "Image5", "#ff00ff");
-            AddGridItem(grid, "Image6", "#00ffff");
-
-            AddGridItem(grid, "Image7", "#ff0000");
-            AddGridItem(grid, "Image8", "#00ff00");
-            AddGridItem(grid, "Image9", "#0000ff");
-            AddGridItem(grid, "Image10", "#ffff00");
-            AddGridItem(grid, "Image11", "#ff00ff");
-            AddGridItem(grid, "Image12", "#00ffff");
-
-            AddGridItem(grid, "Image7", "#ff0000");
-            AddGridItem(grid, "Image8", "#00ff00");
-            AddGridItem(grid, "Image9", "#0000ff");
-            AddGridItem(grid, "Image10", "#ffff00");
-            AddGridItem(grid, "Image11", "#ff00ff");
-            AddGridItem(grid, "Image12", "#00ffff");
-
-            AddGridItem(grid, "Image7", "#ff0000");
-            AddGridItem(grid, "Image8", "#00ff00");
-            AddGridItem(grid, "Image9", "#0000ff");
-            AddGridItem(grid, "Image10", "#ffff00");
-            AddGridItem(grid, "Image11", "#ff00ff");
-            AddGridItem(grid, "Image12", "#00ffff");
+            foreach (Twitch.API.Helix.Reward reward in rewards.Data)
+            {
+                AddReward(reward);
+            }
 
             return go;
         }
 
-        private static void AddGridItem(GridLayoutGroup grid, string name, string color)
+        public static void AddReward(Twitch.API.Helix.Reward reward)
         {
-            var item = CreateGridItem(name, color);
+            var item = CreateGridItem(reward);
 
             item.transform.SetParent(grid.transform);
 
@@ -280,17 +262,73 @@ namespace ValheimTwitch
 
         private static Color HexToColor(string hex)
         {
-            var result = ColorUtility.TryParseHtmlString($"{hex}66", out Color color);
+            var result = ColorUtility.TryParseHtmlString($"{hex}cc", out Color color);
 
             return result ? color : new Color(1, 1, 1, 0.5f);
         }
 
-        private static GameObject CreateGridItem(string name, string color)
+        public static async Task<Texture2D> GetRemoteTextureAsync(string url)
         {
-            var go = new GameObject($"{Plugin.LABEL}RewardGridItem{name}");
+            using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(url))
+            {
+                // begin request:
+                var asyncOp = www.SendWebRequest();
 
-            var image = go.AddComponent<Image>();
-            image.color = HexToColor(color);
+                Log.Info($"Loading :{www.url}");
+
+                // await until it's done: 
+                while (asyncOp.isDone == false)
+                    await Task.Delay(1000 / 30); //30 hertz
+
+                Log.Info($"Loaded :{www.url}");
+
+                // read results:
+                if (www.isNetworkError || www.isHttpError)
+                {
+                    Log.Info($"{www.error}, URL:{www.url}");
+
+                    // nothing to return on error:
+                    return null;
+                }
+                else
+                {
+                    Log.Info($"Done :{www.url}");
+
+                    // return valid results:
+                    return DownloadHandlerTexture.GetContent(www);
+                }
+            }
+        }
+
+        public static Texture2D GetRemoteTexture(string url)
+        {
+            Log.Info($"PROUT -------- 1");
+
+            Task<Texture2D> task = Task.Run<Texture2D>(async () => await GetRemoteTextureAsync(url));
+
+            Log.Info($"PROUT -------- 2");
+
+            return task.Result;
+        }
+
+        private static GameObject CreateGridItem(Twitch.API.Helix.Reward reward)
+        {
+            var go = new GameObject($"{Plugin.LABEL}RewardGridItem{reward.Title}");
+
+            var bgImage = go.AddComponent<Image>();
+            bgImage.color = HexToColor(reward.BackgroundColor);
+
+            var goImage = new GameObject($"{Plugin.LABEL}RewardGridItem{reward.Title}Immage");
+
+            goImage.transform.SetParent(go.transform);
+
+            Log.Info($"Image -> {reward.DefaultImage.Url1x}");
+
+            var image = goImage.AddComponent<Image>();
+            var texture = GetRemoteTextureAsync(reward.DefaultImage.Url1x).GetAwaiter().GetResult();
+            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+            image.sprite = sprite;
 
             return go;
         }
