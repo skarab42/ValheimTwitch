@@ -8,8 +8,8 @@ using ValheimTwitch.Twitch.Auth;
 
 namespace ValheimTwitch
 {
-    [HarmonyPatch(typeof(FejdStartup), "Start")]
-    public static class FejdStartupPatch
+    //[HarmonyPatch(typeof(FejdStartup), "Start")]
+    public static class FejdStartupPatch__
     {
         private static Button mainButton;
         private static Text mainButtonText;

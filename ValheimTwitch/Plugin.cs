@@ -61,7 +61,7 @@ namespace ValheimTwitch
 
             if (twitchAccessToken.Value.Length != 0)
             {
-                TwitchLogin();
+                //TwitchLogin();
             }
 
             Harmony harmony = new Harmony(GUID);
@@ -80,7 +80,7 @@ namespace ValheimTwitch
 
                 Log.Info($"Twitch User: {user.Login}");
 
-                FejdStartupPatch.rewards = rewards;
+                //FejdStartupPatch.rewards = rewards;
 
                 //foreach (Twitch.API.Helix.Reward reward in rewards.Data)
                 //{
@@ -116,7 +116,7 @@ namespace ValheimTwitch
 
             TwitchLogin();
 
-            FejdStartupPatch.UpdateText();
+            //FejdStartupPatch.UpdateText();
         }
     }
 }

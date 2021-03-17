@@ -57,6 +57,19 @@ namespace ValheimTwitch.Helpers
 
             return texture;
         }
+
+        public static Font GetFont(string fontName)
+        {
+            var fonts = Resources.FindObjectsOfTypeAll<Font>();
+
+            foreach (Font font in fonts)
+            {
+                if (font.name.Equals(fontName))
+                    return font;
+            }
+
+            return fonts[0];
+        }
     }
 
 }
