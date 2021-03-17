@@ -4,14 +4,16 @@ namespace ValheimTwitch.GUI
 {
     public class StartGui : MonoBehaviour
     {
-        public GameObject startGui;
+        public MainButton mainButton;
+
+        private GameObject goStartGui;
 
         private void Awake()
         {
-            startGui = new GameObject($"{Plugin.LABEL}StartGui");
-            startGui.transform.SetParent(this.transform);
+            goStartGui = new GameObject($"{Plugin.LABEL}StartGui");
+            goStartGui.transform.SetParent(transform);
 
-            var rect = startGui.AddComponent<RectTransform>();
+            var rect = goStartGui.AddComponent<RectTransform>();
 
             rect.sizeDelta = new Vector2(0, 0);
             rect.anchorMin = new Vector2(0.0f, 0.0f); 
@@ -19,12 +21,17 @@ namespace ValheimTwitch.GUI
             rect.offsetMin = new Vector2(0.0f, 0.0f);
             rect.offsetMax = new Vector2(0.0f, 0.0f);
 
-            startGui.AddComponent<MainButton>();
+            mainButton = goStartGui.AddComponent<MainButton>();
+        }
+
+        public void SetMainButtonText(string text)
+        {
+            mainButton.SetText(text);
         }
 
         public void SetActive(bool active)
         {
-            startGui.SetActive(active);
+            goStartGui.SetActive(active);
         }
     }
 }

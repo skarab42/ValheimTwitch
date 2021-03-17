@@ -300,6 +300,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PluginConfig.cs" />
     <Compile Include="GameClasses\FejdStartupPatch__.cs" />
     <Compile Include="GUI\MainButtonText.cs" />
     <Compile Include="GUI\MainButton.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Patches\ObjectStateExtensions.cs" />
     <Compile Include="Twitch\API\Helix\Reward.cs" />
     <Compile Include="Twitch\API\Helix\Rewards.cs" />
+    <Compile Include="Twitch\Auth\TokenProvider.cs" />
     <Compile Include="Twitch\Auth\Token.cs" />
     <Compile Include="Twitch\Utils\Generate.cs" />
     <Compile Include="Helpers\EmbeddedAsset.cs" />
@@ -322,7 +324,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Patches\FejdStartupPatch.cs" />
-    <Compile Include="Twitch\Auth\Provider.cs" />
+    <Compile Include="Twitch\Auth\CodeProvider.cs" />
     <Compile Include="Twitch\PubSub\Client.cs" />
     <Compile Include="Twitch\API\Helix\User.cs" />
     <Compile Include="Twitch\API\Helix\Users.cs" />

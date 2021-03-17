@@ -6,15 +6,15 @@ namespace ValheimTwitch.GUI
 {
     public class MainButtonText : MonoBehaviour
     {
-        private GameObject mainButtonText;
-        public Text buttonText;
+        private GameObject goMainButtonText;
+        private Text buttonText;
 
         private void Awake()
         {
-            mainButtonText = new GameObject("MainButtonText");
-            mainButtonText.transform.SetParent(transform);
+            goMainButtonText = new GameObject("MainButtonText");
+            goMainButtonText.transform.SetParent(transform);
 
-            var rect = mainButtonText.AddComponent<RectTransform>();
+            var rect = goMainButtonText.AddComponent<RectTransform>();
 
             rect.sizeDelta = new Vector2(0.0f, 0.0f);
             rect.anchorMin = new Vector2(0.3f, 0.0f);
@@ -22,15 +22,13 @@ namespace ValheimTwitch.GUI
             rect.offsetMin = new Vector2(0.0f, 0.0f);
             rect.offsetMax = new Vector2(0.0f, 0.0f);
 
-            mainButtonText.AddComponent<CanvasRenderer>();
+            goMainButtonText.AddComponent<CanvasRenderer>();
 
-            buttonText = mainButtonText.AddComponent<Text>();
-
+            buttonText = goMainButtonText.AddComponent<Text>();
             buttonText.font = EmbeddedAsset.GetFont("Norse");
             buttonText.alignment = TextAnchor.MiddleCenter;
             buttonText.resizeTextForBestFit = true;
             buttonText.color = Color.white;
-
             buttonText.text = "Loading...";
         }
 

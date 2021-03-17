@@ -22,14 +22,37 @@ namespace ValheimTwitch.Twitch.API
             credentials = new Credentials(clientId, accessToken);
         }
 
+        public Client(string clientId, string accessToken, string refreshToken)
+        {
+            credentials = new Credentials(clientId, accessToken, refreshToken);
+        }
+
         public string Get(string url)
         {
             using (WebClient client = new WebClient())
             {
-                client.Headers.Add($"Client-Id: {credentials.clientId}");
-                client.Headers.Add($"Authorization: Bearer {credentials.accessToken}");
-                
-                return client.DownloadString(url);
+                try
+                {
+                    client.Headers.Add($"Client-Id: {credentials.clientId}");
+                    client.Headers.Add($"Authorization: Bearer {credentials.accessToken}");
+
+                    return client.DownloadString(url);
+                }
+                catch (WebException e)
+                {
+                    HttpWebResponse response = (HttpWebResponse)e.Response;
+
+                    if (response.StatusCode != HttpStatusCode.Unauthorized)
+                    {
+                        throw e;
+                    }
+
+                    // try to refresh token
+                    // -> Get
+                    // -> throw Ex
+                    // return Get(url, false);
+                    throw new Exception("TODO refresh token!");
+                }
             }
         }
 

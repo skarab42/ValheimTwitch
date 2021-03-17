@@ -6,16 +6,17 @@ namespace ValheimTwitch.GUI
 {
     public class MainButton : MonoBehaviour
     {
-        private MainButtonText mainButtonText;
-        private GameObject mainButton;
-        private Button button;
+        public MainButtonText mainButtonText;
+        public Button button;
+
+        private GameObject goMainButton;
 
         private void Awake()
         {
-            mainButton = new GameObject("MainButton");
-            mainButton.transform.SetParent(transform);
+            goMainButton = new GameObject("MainButton");
+            goMainButton.transform.SetParent(transform);
 
-            var rect = mainButton.AddComponent<RectTransform>();
+            var rect = goMainButton.AddComponent<RectTransform>();
 
             rect.sizeDelta = new Vector2(250, 100);
             rect.anchorMin = new Vector2(0.0f, 0.5f);
@@ -25,19 +26,19 @@ namespace ValheimTwitch.GUI
 
             rect.Translate(10, 0, 0);
 
-            mainButton.AddComponent<CanvasRenderer>();
+            goMainButton.AddComponent<CanvasRenderer>();
 
-            var image = mainButton.AddComponent<Image>();
+            var image = goMainButton.AddComponent<Image>();
 
             Texture2D logoTexture = EmbeddedAsset.LoadTexture2D("Assets.TwitchLogo.png");
             var sprite = Sprite.Create(logoTexture, new Rect(0, 0, logoTexture.width, logoTexture.height), new Vector2(0.5f, 0.5f));
 
             image.sprite = sprite;
 
-            button = mainButton.AddComponent<Button>();
+            button = goMainButton.AddComponent<Button>();
             button.targetGraphic = image;
 
-            mainButtonText = mainButton.AddComponent<MainButtonText>();
+            mainButtonText = goMainButton.AddComponent<MainButtonText>();
         }
 
         public void SetText(string text)
@@ -47,7 +48,7 @@ namespace ValheimTwitch.GUI
 
         public void SetActive(bool active)
         {
-            mainButton.SetActive(active);
+            goMainButton.SetActive(active);
         }
     }
 }

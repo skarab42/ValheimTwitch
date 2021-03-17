@@ -1,8 +1,9 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
 using HarmonyLib;
 using System;
 using ValheimTwitch.Helpers;
+using ValheimTwitch.Patches;
+using ValheimTwitch.Twitch.API.Helix;
 using ValheimTwitch.Twitch.Auth;
 
 namespace ValheimTwitch
@@ -23,8 +24,6 @@ namespace ValheimTwitch
             "user:read:email",
             "channel:read:redemptions"
         };
-
-        public ConfigEntry<string> twitchAccessToken;
 
         public Twitch.API.Client twitchClient;
         public Twitch.PubSub.Client twitchPubSubClient;
@@ -57,22 +56,60 @@ namespace ValheimTwitch
 
             instance = this;
 
-            twitchAccessToken = Config.Bind("Twitch", "AccessToken", "", "Twitch access token");
-
-            if (twitchAccessToken.Value.Length != 0)
+            if (PluginConfig.HasKey("twitch", "accessToken"))
             {
-                //TwitchLogin();
+                TwitchConnect();
             }
 
             Harmony harmony = new Harmony(GUID);
             harmony.PatchAll();
         }
 
-        private void TwitchLogin()
+        private void OnToken(object sender, TokenArgs e)
+        {
+            PluginConfig.SetString("twitch", "accessToken", e.Token.AccessToken);
+            PluginConfig.SetString("twitch", "refreshToken", e.Token.RefreshToken);
+
+            TwitchConnect();
+
+            StartPatch.UpdateMainButonText();
+        }
+
+        public User GetUser()
+        {
+            return twitchClient?.user;
+        }
+
+        private void OnTokenError(object sender, TokenErrorArgs e)
+        {
+            Log.Error(e.Message);
+        }
+
+        public void TwitchAuth()
+        {
+            Log.Debug("TwitchAuth....");
+
+            var tokenProvider = new TokenProvider(
+                TWITCH_APP_CLIENT_ID,
+                TWITCH_REDIRECT_HOST,
+                TWITCH_REDIRECT_PORT,
+                TWITCH_SCOPES
+            );
+
+            tokenProvider.OnToken += OnToken;
+            tokenProvider.OnError += OnTokenError;
+
+            tokenProvider.GetToken();
+        }
+
+        public void TwitchConnect()
         {
             try
             {
-                twitchClient = new Twitch.API.Client(TWITCH_APP_CLIENT_ID, twitchAccessToken.Value);
+                var accessToken = PluginConfig.GetString("twitch", "accessToken");
+                var refreshToken = PluginConfig.GetString("twitch", "refreshToken");
+
+                twitchClient = new Twitch.API.Client(TWITCH_APP_CLIENT_ID, accessToken, refreshToken);
                 twitchPubSubClient = new Twitch.PubSub.Client(twitchClient);
 
                 Twitch.API.Helix.User user = twitchClient.GetUser();
@@ -108,15 +145,6 @@ namespace ValheimTwitch
         private void OnRewardRedeemed(object sender, Twitch.PubSub.RewardRedeemedArgs e)
         {
             Log.Info($"OnRewardRedeemed: {e.Redemption.Reward.Title}");
-        }
-
-        internal void OnAuthToken(Token token)
-        {
-            twitchAccessToken.Value = token.AccessToken;
-
-            TwitchLogin();
-
-            //FejdStartupPatch.UpdateText();
         }
     }
 }

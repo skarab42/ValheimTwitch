@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Net;
+﻿using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using ValheimTwitch.Twitch.Utils;
@@ -8,28 +6,25 @@ using WatsonWebserver;
 
 namespace ValheimTwitch.Twitch.Auth
 { 
-    public class AuthCodeArgs : EventArgs
+    public class CodeArgs : EventArgs
     {
         public string Code { get; set; }
-        public string Error { get; set; }
     }
 
-    public class AuthTokenArgs : EventArgs
+    public class CodeErrorArgs : EventArgs
     {
-        public Token Token { get; set; }
-        public string Error { get; set; }
+        public string Message { get; set; }
     }
 
-    public delegate void AuthCodeHandler(object sender, AuthCodeArgs e);
-    public delegate void AuthTokenHandler(object sender, AuthTokenArgs e);
+    public delegate void CodeHandler(object sender, CodeArgs e);
+    public delegate void CodeErrorHandler(object sender, CodeErrorArgs e);
 
-    class Provider
+    public class CodeProvider
     {
-        public event AuthCodeHandler OnAuthCode;
-        public event AuthTokenHandler OnAuthToken;
+        public event CodeHandler OnCode;
+        public event CodeErrorHandler OnError;
 
         private const string AUTH_URL = "https://id.twitch.tv/oauth2/authorize";
-        private const string FIREBASE_URL = "https://us-central1-valheim-twitch-mod.cloudfunctions.net/getTwitchTokenFromCode";
 
         private const string HTML_TEMPLATE = "<html><head><title>{0}</title></head><body>{1}</body></html>";
         private const string SUCCESS_MESSAGE = "<p><strong>✔ Authentication successful!</strong></p><p>You can close this page.</p>";
@@ -43,7 +38,7 @@ namespace ValheimTwitch.Twitch.Auth
         private string state;
         private Server server;
 
-        public Provider(string clientId, string redirectHost, int redirectPort, string[] scopes)
+        public CodeProvider(string clientId, string redirectHost, int redirectPort, string[] scopes)
         {
             this.scopes = scopes;
             this.clientId = clientId;
@@ -72,7 +67,6 @@ namespace ValheimTwitch.Twitch.Auth
         {
             context.Response.StatusCode = code;
             context.Response.ContentType = "text/html; charset=utf-8";
-
             return context.Response.Send(String.Format(HTML_TEMPLATE, title, body));
         }
 
@@ -81,10 +75,7 @@ namespace ValheimTwitch.Twitch.Auth
             if (context.Request.Query.Elements.ContainsKey("error"))
             {
                 var message = context.Request.Query.Elements["error_description"].Replace("+", " ");
-
-                OnAuthCode?.Invoke(this, new AuthCodeArgs { Error = message });
-                OnAuthToken?.Invoke(this, new AuthTokenArgs { Error = message });
-
+                OnError?.Invoke(this, new CodeErrorArgs { Message = message });
                 await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, $"<i>{message}.</i>"), 401);
             }
             else if (context.Request.Query.Elements.ContainsKey("code"))
@@ -95,48 +86,19 @@ namespace ValheimTwitch.Twitch.Auth
                 if (responseState != state)
                 {
                     var message = "Invalid auth state 🤡";
-
-                    OnAuthCode?.Invoke(this, new AuthCodeArgs { Error = message });
-                    OnAuthToken?.Invoke(this, new AuthTokenArgs { Error = message });
-
+                    OnError?.Invoke(this, new CodeErrorArgs { Message = message });
                     await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, message), 401);
                 }
                 else
                 {
-                    OnAuthCodeSuccess(code);
-
-                    OnAuthCode?.Invoke(this, new AuthCodeArgs { Code = code });
-
+                    OnCode?.Invoke(this, new CodeArgs { Code = code });
                     await SendHTML(context, "Success", SUCCESS_MESSAGE, 200);
                 }
             }
 
             server.Stop();
+            server.Dispose();
             server = null;
-        }
-
-        private void OnAuthCodeSuccess(string code)
-        {
-            using (WebClient client = new WebClient())
-            {
-                var url = $"{FIREBASE_URL}?code={code}";
-                var json = client.DownloadString(url);
-
-                var aResponse = JsonConvert.DeserializeObject<AbstractResponse>(json);
-
-                if (aResponse is Response response)
-                {
-                    var message = $"Error {response.Status}: {response.Message}";
-
-                    OnAuthToken?.Invoke(this, new AuthTokenArgs { Error = message });
-                }
-                else
-                {
-                    var token = aResponse as Token;
-
-                    OnAuthToken?.Invoke(this, new AuthTokenArgs { Token = token });
-                }
-            }
         }
     }
 }

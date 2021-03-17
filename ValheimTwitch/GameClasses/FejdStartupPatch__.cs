@@ -357,23 +357,23 @@ namespace ValheimTwitch
                 return;
             }
 
-            var provider = new Provider(
+            var provider = new CodeProvider(
                 Plugin.TWITCH_APP_CLIENT_ID,
                 Plugin.TWITCH_REDIRECT_HOST,
                 Plugin.TWITCH_REDIRECT_PORT,
                 Plugin.TWITCH_SCOPES
             );
 
-            provider.OnAuthToken += OnAuthToken;
+            //provider.OnAuthToken += OnAuthToken;
 
             provider.GetCode();
         }
 
-        private static void OnAuthToken(object sender, AuthTokenArgs e)
+        private static void OnAuthToken(object sender, TokenArgs e)
         {
             if (e.Error == null)
             {
-                Plugin.Instance.OnAuthToken(e.Token);
+                //Plugin.Instance.OnAuthToken(e.Token);
             }
             else
             {
