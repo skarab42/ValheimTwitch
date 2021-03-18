@@ -82,24 +82,15 @@ namespace ValheimTwitch
 
         private void OnTokenError(object sender, TokenErrorArgs e)
         {
-            Log.Error(e.Message);
+            Log.Error($"OnTokenError: {e.Message}");
+            // TODO notify user...
         }
 
         public void TwitchAuth()
         {
             Log.Debug("TwitchAuth....");
 
-            var tokenProvider = new TokenProvider(
-                TWITCH_APP_CLIENT_ID,
-                TWITCH_REDIRECT_HOST,
-                TWITCH_REDIRECT_PORT,
-                TWITCH_SCOPES
-            );
-
-            tokenProvider.OnToken += OnToken;
-            tokenProvider.OnError += OnTokenError;
-
-            tokenProvider.GetToken();
+            twitchClient.Auth();
         }
 
         public void TwitchConnect()
@@ -109,11 +100,21 @@ namespace ValheimTwitch
                 var accessToken = PluginConfig.GetString("twitch", "accessToken");
                 var refreshToken = PluginConfig.GetString("twitch", "refreshToken");
 
-                twitchClient = new Twitch.API.Client(TWITCH_APP_CLIENT_ID, accessToken, refreshToken);
+                var tokenProvider = new TokenProvider(
+                    TWITCH_APP_CLIENT_ID,
+                    TWITCH_REDIRECT_HOST,
+                    TWITCH_REDIRECT_PORT,
+                    TWITCH_SCOPES
+                );
+
+                tokenProvider.OnToken += OnToken;
+                tokenProvider.OnError += OnTokenError;
+
+                twitchClient = new Twitch.API.Client(TWITCH_APP_CLIENT_ID, accessToken, refreshToken, tokenProvider);
                 twitchPubSubClient = new Twitch.PubSub.Client(twitchClient);
 
-                Twitch.API.Helix.User user = twitchClient.GetUser();
-                Twitch.API.Helix.Rewards rewards = twitchClient.GetRewards();
+                User user = twitchClient.GetUser();
+                Rewards rewards = twitchClient.GetRewards();
 
                 Log.Info($"Twitch User: {user.Login}");
 
@@ -133,7 +134,8 @@ namespace ValheimTwitch
             }
             catch (Exception e)
             {
-                Log.Error($"Error: {e.Message}");
+                Log.Error($"Error: {e}");
+                // TODO notify user...
             }
         }
 

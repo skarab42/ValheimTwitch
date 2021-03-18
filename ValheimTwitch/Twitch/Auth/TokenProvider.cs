@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Net;
+using ValheimTwitch.Twitch.API;
 
 namespace ValheimTwitch.Twitch.Auth
 {
@@ -26,7 +27,7 @@ namespace ValheimTwitch.Twitch.Auth
         private readonly CodeProvider provider;
 
         private const string GET_TOKEN_URL = "https://us-central1-valheim-twitch-mod.cloudfunctions.net/getTwitchTokenFromCode";
-        //private const string REFRESH_TOKEN_URL = "https://us-central1-valheim-twitch-mod.cloudfunctions.net/refreshTwitchToken";
+        private const string REFRESH_TOKEN_URL = "https://us-central1-valheim-twitch-mod.cloudfunctions.net/refreshTwitchToken";
 
         public TokenProvider(CodeProvider provider)
         {
@@ -40,33 +41,61 @@ namespace ValheimTwitch.Twitch.Auth
             provider.OnCode += OnCode;
         }
 
-        private void OnCode(object sender, CodeArgs e)
+        private Token RequestToken(string url)
         {
             using (WebClient client = new WebClient())
             {
-                var url = $"{GET_TOKEN_URL}?code={e.Code}";
-                var json = client.DownloadString(url);
-
-                var aResponse = JsonConvert.DeserializeObject<AbstractResponse>(json);
-
-                if (aResponse is Response response)
+                try
                 {
-                    var message = $"Error {response.Status}: {response.Message}";
+                    var json = client.DownloadString(url);
+                    var aResponse = JsonConvert.DeserializeObject<AbstractResponse>(json);
 
-                    OnError?.Invoke(this, new TokenErrorArgs { Message = message });
+                    if (aResponse is Response response)
+                    {
+                        var message = $"Error {response.Status}: {response.Message}";
+                        OnError?.Invoke(this, new TokenErrorArgs { Message = message });
+                        return null;
+                    }
+                    else
+                    {
+                        var token = aResponse as Token;
+                        OnToken?.Invoke(this, new TokenArgs { Token = token });
+                        return token;
+                    }
                 }
-                else
+                catch (WebException e)
                 {
-                    var token = aResponse as Token;
+                    HttpWebResponse response = (HttpWebResponse)e.Response;
 
-                    OnToken?.Invoke(this, new TokenArgs { Token = token });
+                    OnError?.Invoke(this, new TokenErrorArgs { Message = response.StatusCode.ToString() });
+                    return null;
                 }
             }
+        }
+
+        private Token RequestTokenFromCode(string code)
+        {
+            return RequestToken($"{GET_TOKEN_URL}?code={code}");
+        }
+
+        private Token RequestRefreshToken(string refreshToken)
+        {
+            return RequestToken($"{REFRESH_TOKEN_URL}?refreshToken={refreshToken}");
+        }
+
+        private void OnCode(object sender, CodeArgs e)
+        {
+            RequestTokenFromCode(e.Code);
         }
 
         public void GetToken()
         {
             provider.GetCode();
+        }
+
+        public Token RefreshToken(Client client)
+        {
+            return RequestRefreshToken(client.credentials.refreshToken);
         }
     }
 }

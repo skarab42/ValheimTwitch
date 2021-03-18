@@ -8,8 +8,9 @@ namespace ValheimTwitch.Twitch.API
     public class Client
     {
         public Helix.User user;
+        public TokenProvider tokenProvider;
+        public readonly Credentials credentials;
 
-        private readonly Credentials credentials;
         private readonly string helixURL = "https://api.twitch.tv/helix";
 
         public Client(Credentials credentials)
@@ -22,12 +23,13 @@ namespace ValheimTwitch.Twitch.API
             credentials = new Credentials(clientId, accessToken);
         }
 
-        public Client(string clientId, string accessToken, string refreshToken)
+        public Client(string clientId, string accessToken, string refreshToken, TokenProvider tokenProvider)
         {
+            this.tokenProvider = tokenProvider;
             credentials = new Credentials(clientId, accessToken, refreshToken);
         }
 
-        public string Get(string url)
+        public string Get(string url, bool refresh = true)
         {
             using (WebClient client = new WebClient())
             {
@@ -42,16 +44,17 @@ namespace ValheimTwitch.Twitch.API
                 {
                     HttpWebResponse response = (HttpWebResponse)e.Response;
 
-                    if (response.StatusCode != HttpStatusCode.Unauthorized)
+                    if (refresh == false || response.StatusCode != HttpStatusCode.Unauthorized)
                     {
                         throw e;
                     }
 
-                    // try to refresh token
-                    // -> Get
-                    // -> throw Ex
-                    // return Get(url, false);
-                    throw new Exception("TODO refresh token!");
+                    if (tokenProvider.RefreshToken(this) == null)
+                    {
+                        throw e;
+                    }
+
+                    return Get(url, false);
                 }
             }
         }
@@ -70,6 +73,11 @@ namespace ValheimTwitch.Twitch.API
             user = users.Data[0];
 
             return user;
+        }
+
+        public void Auth()
+        {
+            tokenProvider.GetToken();
         }
 
         public string GetUserAcessToken()
