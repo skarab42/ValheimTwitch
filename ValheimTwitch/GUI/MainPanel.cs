@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using ValheimTwitch.GUI.ScrollView;
 
 namespace ValheimTwitch.GUI
 {
@@ -28,7 +29,36 @@ namespace ValheimTwitch.GUI
 
             image.color = new Color32(0, 0, 0, 120);
 
-            goMainPanel.AddComponent<VerticalScrollView>();
+            var scrollView = goMainPanel.AddComponent<VerticalScrollView>();
+            var grid = scrollView.AddContentComponent<GridLayoutGroup>();
+
+            grid.constraint = GridLayoutGroup.Constraint.Flexible;
+            grid.padding = new RectOffset(20, 20, 20, 20);
+            grid.spacing = new Vector2(20, 20);
+
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
+            //grid.transform.gameObject.AddComponent<RewardItem>();
 
             goMainPanel.SetActive(false);
         }

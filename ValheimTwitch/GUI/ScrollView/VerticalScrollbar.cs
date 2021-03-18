@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace ValheimTwitch.GUI
+namespace ValheimTwitch.GUI.ScrollView
 {
     public class VerticalScrollbar : MonoBehaviour
     {
@@ -25,12 +25,15 @@ namespace ValheimTwitch.GUI
             scrollbar = goVerticalScrollbar.AddComponent<Scrollbar>();
 
             var image = goVerticalScrollbar.AddComponent<Image>();
-            image.color = new Color32(0, 255, 0, 150);
+            image.color = new Color32(0, 0, 0, 150);
 
             var slidingArea = goVerticalScrollbar.AddComponent<SlidingArea>();
 
+            scrollbar.direction = Scrollbar.Direction.BottomToTop;
             scrollbar.targetGraphic = slidingArea.handle.image;
             scrollbar.handleRect = slidingArea.handle.rect;
+            scrollbar.interactable = true;
+            scrollbar.value = 1;
         }
     }
 }

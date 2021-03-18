@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-namespace ValheimTwitch.GUI
+namespace ValheimTwitch.GUI.ScrollView
 {
     public class SlidingArea : MonoBehaviour
     {
         private GameObject goSlidingArea;
-        public SlidingAreaHandle handle;
+        public Handle handle;
 
         private void Awake()
         {
@@ -20,7 +20,7 @@ namespace ValheimTwitch.GUI
             rect.anchorMin = new Vector2(0f, 0f);
             rect.anchorMax = new Vector2(1f, 1f);
 
-            handle = goSlidingArea.AddComponent<SlidingAreaHandle>();
+            handle = goSlidingArea.AddComponent<Handle>();
         }
     }
 }

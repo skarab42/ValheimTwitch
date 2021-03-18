@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace ValheimTwitch.GUI
+namespace ValheimTwitch.GUI.ScrollView
 {
     public class VerticalScrollView : MonoBehaviour
     {
+        public VerticalScrollbar verticalScrollbar;
+
         private GameObject goVerticalScrollView;
+        private Viewport viewport;
 
         private void Awake()
         {
@@ -23,14 +26,20 @@ namespace ValheimTwitch.GUI
             goVerticalScrollView.AddComponent<CanvasRenderer>();
 
             var scrollRect = goVerticalScrollView.AddComponent<ScrollRect>();
-            var verticalScrollbar = goVerticalScrollView.AddComponent<VerticalScrollbar>();
+            verticalScrollbar = goVerticalScrollView.AddComponent<VerticalScrollbar>();
+            viewport = goVerticalScrollView.AddComponent<Viewport>();
 
             scrollRect.vertical = true;
             scrollRect.horizontal = false;
             scrollRect.scrollSensitivity = 10;
+            scrollRect.viewport = viewport.rect;
+            scrollRect.content = viewport.content.rect;
             scrollRect.verticalScrollbar = verticalScrollbar.scrollbar;
-            //scrollRect.viewport = viewport.GetComponent<RectTransform>();
-            //scrollRect.content = viewport.transform.GetChild(0).GetComponent<RectTransform>();
+        }
+
+        public T AddContentComponent<T>() where T : Component
+        {
+            return viewport.content.goContent.AddComponent<T>();
         }
     }
 }
