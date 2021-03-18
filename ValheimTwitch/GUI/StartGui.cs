@@ -5,6 +5,7 @@ namespace ValheimTwitch.GUI
     public class StartGui : MonoBehaviour
     {
         public MainButton mainButton;
+        public MainPanel mainPanel;
 
         private GameObject goStartGui;
 
@@ -22,6 +23,7 @@ namespace ValheimTwitch.GUI
             rect.offsetMax = new Vector2(0.0f, 0.0f);
 
             mainButton = goStartGui.AddComponent<MainButton>();
+            mainPanel = goStartGui.AddComponent<MainPanel>();
         }
 
         public void SetMainButtonText(string text)

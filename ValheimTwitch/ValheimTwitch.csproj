@@ -300,6 +300,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\MainPanel.cs" />
+    <Compile Include="GUI\SlidingArea.cs" />
+    <Compile Include="GUI\SlidingAreaHandle.cs" />
+    <Compile Include="GUI\VerticalScrollbar.cs" />
+    <Compile Include="GUI\VerticalScrollView.cs" />
     <Compile Include="PluginConfig.cs" />
     <Compile Include="GameClasses\FejdStartupPatch__.cs" />
     <Compile Include="GUI\MainButtonText.cs" />

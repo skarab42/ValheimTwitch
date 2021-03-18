@@ -22,6 +22,8 @@ namespace ValheimTwitch.Patches
         {
             if (Plugin.Instance.GetUser() == null)
                 Plugin.Instance.TwitchAuth();
+            else
+                startup.startGui.mainPanel.ToggleActive();
         }
 
         public static void UpdateMainButonText()

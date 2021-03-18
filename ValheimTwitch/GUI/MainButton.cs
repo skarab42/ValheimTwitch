@@ -21,8 +21,8 @@ namespace ValheimTwitch.GUI
             rect.sizeDelta = new Vector2(250, 100);
             rect.anchorMin = new Vector2(0.0f, 0.5f);
             rect.anchorMax = new Vector2(0.0f, 0.5f);
-            rect.offsetMin = new Vector2(0.0f, 0.0f);
-            rect.offsetMax = new Vector2(250.0f, 100.0f);
+            rect.offsetMin = new Vector2(0.0f, -50.0f);
+            rect.offsetMax = new Vector2(250.0f, 50.0f);
 
             rect.Translate(10, 0, 0);
 
