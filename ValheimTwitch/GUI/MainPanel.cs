@@ -36,7 +36,16 @@ namespace ValheimTwitch.GUI
             grid.padding = new RectOffset(20, 20, 20, 20);
             grid.spacing = new Vector2(20, 20);
 
-            //grid.transform.gameObject.AddComponent<RewardItem>();
+            foreach (Twitch.API.Helix.Reward reward in Plugin.Instance.twitchRewards.Data)
+            {
+                Log.Info($"Reward: {reward.Title}");
+
+                var item = grid.transform.gameObject.AddComponent<RewardItem>();
+
+                item.SetReward(reward);
+            }
+
+            //
             //grid.transform.gameObject.AddComponent<RewardItem>();
             //grid.transform.gameObject.AddComponent<RewardItem>();
 

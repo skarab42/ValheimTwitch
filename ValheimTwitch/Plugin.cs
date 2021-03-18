@@ -25,6 +25,7 @@ namespace ValheimTwitch
             "channel:read:redemptions"
         };
 
+        public Rewards twitchRewards;
         public Twitch.API.Client twitchClient;
         public Twitch.PubSub.Client twitchPubSubClient;
 
@@ -114,11 +115,9 @@ namespace ValheimTwitch
                 twitchPubSubClient = new Twitch.PubSub.Client(twitchClient);
 
                 User user = twitchClient.GetUser();
-                Rewards rewards = twitchClient.GetRewards();
+                twitchRewards = twitchClient.GetRewards();
 
                 Log.Info($"Twitch User: {user.Login}");
-
-                //FejdStartupPatch.rewards = rewards;
 
                 //foreach (Twitch.API.Helix.Reward reward in rewards.Data)
                 //{

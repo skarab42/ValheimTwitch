@@ -43,18 +43,6 @@ namespace ValheimTwitch.Twitch.API.Helix
         public int GlobalCooldownSeconds { get; set; }
     }
 
-    public class DefaultImage
-    {
-        [JsonProperty("url_1x")]
-        public string Url1x { get; set; }
-
-        [JsonProperty("url_2x")]
-        public string Url2x { get; set; }
-
-        [JsonProperty("url_4x")]
-        public string Url4x { get; set; }
-    }
-
     public class Reward
     {
         [JsonProperty("broadcaster_name")]
@@ -106,7 +94,7 @@ namespace ValheimTwitch.Twitch.API.Helix
         public bool IsInStock { get; set; }
 
         [JsonProperty("default_image")]
-        public DefaultImage DefaultImage { get; set; }
+        public Image DefaultImage { get; set; }
 
         [JsonProperty("should_redemptions_skip_request_queue")]
         public bool ShouldRedemptionsSkipRequestQueue { get; set; }
