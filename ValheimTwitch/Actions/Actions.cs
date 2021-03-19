@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using ValheimTwitch.Twitch.PubSub.Messages;
 
 namespace ValheimTwitch.Events
 {
 
     abstract public class Action
     {
-        public void Run()
+        public virtual void Run(Redemption redemption)
         {
             Log.Info($"Run -> {GetType().Name}");
         }
@@ -55,14 +56,11 @@ namespace ValheimTwitch.Events
             return names[type];
         }
 
-        public static void RunAction(Types type)
+        internal static void RunAction(Redemption redemption)
         {
-            actions[(int)type].Run();
-        }
+            var type = PluginConfig.GetInt("reward-actions", redemption.Reward.Id);
 
-        public static void RunAction(int type)
-        {
-            actions[type].Run();
+            actions[type].Run(redemption);
         }
     }
 }

@@ -306,6 +306,7 @@
     <Compile Include="Actions\PrintTopLeftMessageAction.cs" />
     <Compile Include="Actions\SpawnHuginAction.cs" />
     <Compile Include="Actions\SpawnMuninAction.cs" />
+    <Compile Include="Patches\Raven.cs" />
     <Compile Include="GUI\CustomDropdown\DropdownOptions.cs" />
     <Compile Include="GUI\CustomDropdown\DropdownSelect.cs" />
     <Compile Include="GUI\CustomDropdown\CustomDropdown.cs" />
@@ -320,8 +321,8 @@
     <Compile Include="GUI\ScrollView\VerticalScrollView.cs" />
     <Compile Include="GUI\ScrollView\Content.cs" />
     <Compile Include="GUI\ScrollView\Viewport.cs" />
+    <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="PluginConfig.cs" />
-    <Compile Include="GameClasses\FejdStartupPatch__.cs" />
     <Compile Include="GUI\MainButtonText.cs" />
     <Compile Include="GUI\MainButton.cs" />
     <Compile Include="GUI\ValeimTwitchStartup.cs" />

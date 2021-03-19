@@ -145,7 +145,7 @@ namespace ValheimTwitch
 
             if (PluginConfig.HasKey("reward-actions", reward.Id))
             {
-                Actions.RunAction(PluginConfig.GetInt("reward-actions", reward.Id));
+                Actions.RunAction(e.Redemption);
             }
         }
     }
