@@ -1,26 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using ValheimTwitch.Helpers;
 
 namespace ValheimTwitch.GUI
 {
-    public class DropdownLabel : MonoBehaviour
+    abstract public class ADropdownLabel : MonoBehaviour
     {
-        private GameObject goLabel;
+        public GameObject goLabel;
+        public RectTransform rect;
         public Text text;
 
-        private void Awake()
+        public void Awake()
         {
             goLabel = new GameObject("Label");
             goLabel.transform.SetParent(transform);
 
-            var rect = goLabel.AddComponent<RectTransform>();
+            rect = goLabel.AddComponent<RectTransform>();
 
-            rect.sizeDelta = new Vector2(0, 0);
-            rect.offsetMin = new Vector2(0, 0);
-            rect.offsetMax = new Vector2(0, 0);
-            rect.anchorMin = new Vector2(0f, 0f);
-            rect.anchorMax = new Vector2(1f, 1f);
+            SetRectTransform();
 
             goLabel.AddComponent<CanvasRenderer>();
 
@@ -28,8 +26,49 @@ namespace ValheimTwitch.GUI
             text.font = EmbeddedAsset.GetFont("Norse");
             text.alignment = TextAnchor.MiddleCenter;
             text.resizeTextForBestFit = true;
-            text.color = Color.black;
+            text.color = Color.white;
             text.text = "None";
+        }
+
+        protected virtual void SetRectTransform()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class DropdownLabel : ADropdownLabel
+    {
+        protected override void SetRectTransform()
+        {
+            rect.sizeDelta = new Vector2(0, 0);
+            rect.offsetMin = new Vector2(0, 0);
+            rect.offsetMax = new Vector2(0, 0);
+            rect.anchorMin = new Vector2(0, 0);
+            rect.anchorMax = new Vector2(1, 1);
+        }
+    }
+
+    public class DropdownLabelLeft : ADropdownLabel
+    {
+        protected override void SetRectTransform()
+        {
+            rect.anchorMin = new Vector2(0, 0);
+            rect.anchorMax = new Vector2(0.5f, 1);
+            rect.offsetMin = new Vector2(0, 0);
+            rect.offsetMax = new Vector2(0.5f, 1);
+            rect.sizeDelta = new Vector2(0.5f, 1);
+        }
+    }
+
+    public class DropdownLabelRight : ADropdownLabel
+    {
+        protected override void SetRectTransform()
+        {
+            rect.anchorMin = new Vector2(0.5f, 0);
+            rect.anchorMax = new Vector2(1, 1);
+            rect.offsetMin = new Vector2(0.5f, 0);
+            rect.offsetMax = new Vector2(1, 1);
+            rect.sizeDelta = new Vector2(0.5f, 1);
         }
     }
 }

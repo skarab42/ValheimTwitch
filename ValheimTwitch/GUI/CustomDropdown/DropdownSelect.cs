@@ -7,7 +7,8 @@ namespace ValheimTwitch.GUI
     public class DropdownSelect : MonoBehaviour
     {
         private GameObject goSelect;
-        public DropdownLabel label;
+        public ADropdownLabel label;
+        public ADropdownLabel prefix;
         private Button button;
 
         private void Awake()
@@ -21,15 +22,16 @@ namespace ValheimTwitch.GUI
             rect.anchorMin = new Vector2(0, 1);
             rect.anchorMax = new Vector2(1, 1);
             rect.offsetMin = new Vector2(0, -40);
-            rect.offsetMax = new Vector2(20, 0);
+            rect.offsetMax = new Vector2(0, 0);
 
             goSelect.AddComponent<CanvasRenderer>();
 
             var image = goSelect.AddComponent<Image>();
-            image.color = new Color32(0, 0, 255, 255);
+            image.color = new Color32(0, 0, 0, 200);
 
             button = goSelect.AddComponent<Button>();
-            label = goSelect.AddComponent<DropdownLabel>();
+            prefix = goSelect.AddComponent<DropdownLabelLeft>();
+            label = goSelect.AddComponent<DropdownLabelRight>();
         }
 
         public void OnClick(UnityAction action)

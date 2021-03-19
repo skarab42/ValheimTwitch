@@ -40,6 +40,11 @@ namespace ValheimTwitch.GUI
             select.label.text.text = label;
         }
 
+        public void SetPrefix(string label)
+        {
+            select.prefix.text.text = label;
+        }
+
         public void Toggle()
         {
             options.Toggle();

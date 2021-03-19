@@ -31,6 +31,7 @@ namespace ValheimTwitch.GUI
 
             var scrollView = goMainPanel.AddComponent<VerticalScrollView>();
             var grid = scrollView.AddContentComponent<GridLayoutGroup>();
+            var dropdown = goMainPanel.AddComponent<CustomDropdown>();
 
             grid.constraint = GridLayoutGroup.Constraint.Flexible;
             grid.padding = new RectOffset(20, 20, 20, 20);
@@ -43,13 +44,14 @@ namespace ValheimTwitch.GUI
 
                 var item = grid.transform.gameObject.AddComponent<RewardItem>();
 
-                item.button.onClick.AddListener(() => Log.Info($"Clicked on {reward.Title}"));
+                item.button.onClick.AddListener(() => {
+                    Log.Info($"Clicked on {reward.Title}");
+                    dropdown.SetPrefix(reward.Title);
+                    dropdown.Toggle();
+                });
 
                 item.SetReward(reward);
             }
-
-            // drop down
-            var dropdown = goMainPanel.AddComponent<CustomDropdown>();
 
             for (int i = 1; i < 25; i++)
             {
@@ -62,7 +64,6 @@ namespace ValheimTwitch.GUI
                 {
                     dropdown.Toggle();
                     dropdown.SetLabel(item.GetLabel());
-                    Log.Info($">>> {item.GetValue()}");
                 });
             }
 

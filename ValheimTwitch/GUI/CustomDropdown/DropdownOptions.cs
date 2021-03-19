@@ -26,7 +26,7 @@ namespace ValheimTwitch.GUI
             goOptions.AddComponent<CanvasRenderer>();
 
             var image = goOptions.AddComponent<Image>();
-            image.color = new Color32(0, 255, 0, 255);
+            image.color = new Color32(0, 0, 0, 200);
 
             var scrollView = goOptions.AddComponent<VerticalScrollView>();
             grid = scrollView.AddContentComponent<GridLayoutGroup>();
