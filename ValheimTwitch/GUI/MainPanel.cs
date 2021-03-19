@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using ValheimTwitch.Events;
 using ValheimTwitch.GUI.ScrollView;
 
 namespace ValheimTwitch.GUI

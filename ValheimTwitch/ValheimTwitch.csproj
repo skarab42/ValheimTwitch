@@ -301,6 +301,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\Actions.cs" />
+    <Compile Include="Actions\NoneAction.cs" />
+    <Compile Include="Actions\PrintCenterMessageAction.cs" />
+    <Compile Include="Actions\PrintTopLeftMessageAction.cs" />
+    <Compile Include="Actions\SpawnHuginAction.cs" />
+    <Compile Include="Actions\SpawnMuninAction.cs" />
     <Compile Include="GUI\CustomDropdown\DropdownOptions.cs" />
     <Compile Include="GUI\CustomDropdown\DropdownSelect.cs" />
     <Compile Include="GUI\CustomDropdown\CustomDropdown.cs" />

@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using HarmonyLib;
 using System;
+using ValheimTwitch.Events;
 using ValheimTwitch.Helpers;
 using ValheimTwitch.Patches;
 using ValheimTwitch.Twitch.API.Helix;
@@ -119,13 +120,6 @@ namespace ValheimTwitch
 
                 Log.Info($"Twitch User: {user.Login}");
 
-                //foreach (Twitch.API.Helix.Reward reward in rewards.Data)
-                //{
-                //    Log.Info($"Reward: {reward.Title}");
-
-                //    FejdStartupPatch.AddGridItem(reward.Title, reward.BackgroundColor);
-                //}
-
                 twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
                 twitchPubSubClient.OnMaxReconnect += OnMaxReconnect;
 
@@ -145,7 +139,14 @@ namespace ValheimTwitch
 
         private void OnRewardRedeemed(object sender, Twitch.PubSub.RewardRedeemedArgs e)
         {
-            Log.Info($"OnRewardRedeemed: {e.Redemption.Reward.Title}");
+            var reward = e.Redemption.Reward;
+
+            Log.Info($"OnRewardRedeemed: {reward.Title}");
+
+            if (PluginConfig.HasKey("reward-actions", reward.Id))
+            {
+                Actions.RunAction(PluginConfig.GetInt("reward-actions", reward.Id));
+            }
         }
     }
 }
