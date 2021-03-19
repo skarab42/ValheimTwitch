@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ValheimTwitch.GUI
 {
@@ -27,7 +26,10 @@ namespace ValheimTwitch.GUI
             select = goDropdown.AddComponent<DropdownSelect>();
             options = goDropdown.AddComponent<DropdownOptions>();
 
-            select.OnClick(() => options.Toggle());
+            select.OnClick(() => 
+            {
+                options.Toggle();
+            });
         }
 
         public T AddOption<T>() where T : Component

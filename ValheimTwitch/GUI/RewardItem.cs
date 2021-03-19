@@ -81,9 +81,9 @@ namespace ValheimTwitch.GUI
             text.text = reward.Title;
             button.image.color = HexToColor(reward.BackgroundColor);
 
-            if (text.text.Length > 15)
+            if (text.text.Length > 25)
             {
-                text.text = text.text.Substring(0, 15).TrimEnd() + ". . .";
+                text.text = text.text.Substring(0, 25).TrimEnd() + ". . .";
             }
 
             try

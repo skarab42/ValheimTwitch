@@ -33,8 +33,8 @@ namespace ValheimTwitch.GUI
 
             grid.constraint = GridLayoutGroup.Constraint.Flexible;
             grid.padding = new RectOffset(0, 0, 0, 0);
-            grid.spacing = new Vector2(0, 0);
             grid.cellSize = new Vector2(380, 40);
+            grid.spacing = new Vector2(0, 2);
         }
 
         public void Toggle()

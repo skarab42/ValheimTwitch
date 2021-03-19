@@ -300,6 +300,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\Actions.cs" />
     <Compile Include="GUI\CustomDropdown\DropdownOptions.cs" />
     <Compile Include="GUI\CustomDropdown\DropdownSelect.cs" />
     <Compile Include="GUI\CustomDropdown\CustomDropdown.cs" />

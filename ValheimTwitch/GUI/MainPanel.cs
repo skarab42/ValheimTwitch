@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using ValheimTwitch.GUI.ScrollView;
 
@@ -7,6 +8,7 @@ namespace ValheimTwitch.GUI
     public class MainPanel : MonoBehaviour
     {
         private GameObject goMainPanel;
+        private Twitch.API.Helix.Reward selectedReward;
 
         private void Awake()
         {
@@ -46,24 +48,43 @@ namespace ValheimTwitch.GUI
 
                 item.button.onClick.AddListener(() => {
                     Log.Info($"Clicked on {reward.Title}");
+
+                    selectedReward = reward;
+
                     dropdown.SetPrefix(reward.Title);
                     dropdown.Toggle();
+
+                    if (PluginConfig.HasKey("reward-actions", reward.Id))
+                    {
+                        var value = PluginConfig.GetInt("reward-actions", reward.Id);
+                        dropdown.SetLabel(Actions.GetActionName(value));
+                    } else
+                    {
+                        dropdown.SetLabel(Actions.GetActionName(Actions.Types.None));
+                    }
                 });
 
                 item.SetReward(reward);
             }
 
-            for (int i = 1; i < 25; i++)
+            foreach (var action in Actions.GetActionNames())
             {
                 var item = dropdown.AddOption<OptionsItem>();
+
+                item.SetLabel(action.Value);
+                item.SetValue(action.Key.ToString());
                 item.SetColor(new Color32(127, 127, 127, 127));
-                item.SetLabel($"Label {i}");
-                item.SetValue($"Value {i}");
 
                 item.OnClick(() =>
                 {
                     dropdown.Toggle();
                     dropdown.SetLabel(item.GetLabel());
+
+                    if (selectedReward != null)
+                    {
+                        Log.Info($"reward-actions -> {selectedReward.Id} -> {item.GetValue()}");
+                        PluginConfig.SetInt("reward-actions", selectedReward.Id, Convert.ToInt32(item.GetValue()));
+                    }
                 });
             }
 
