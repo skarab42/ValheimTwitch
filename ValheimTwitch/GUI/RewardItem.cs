@@ -8,6 +8,8 @@ namespace ValheimTwitch.GUI
 {
     class RewardItem : MonoBehaviour
     {
+        public Button button;
+        
         private GameObject goRewardItem;
         private Image bgImage;
         private Image image;
@@ -18,7 +20,10 @@ namespace ValheimTwitch.GUI
             goRewardItem = new GameObject("RewardItem");
             goRewardItem.transform.SetParent(transform);
 
+            button = goRewardItem.AddComponent<Button>();
             bgImage = goRewardItem.AddComponent<Image>();
+
+            button.image = bgImage;
 
             // reward image
             var goImage = new GameObject("RewardItemImage");
@@ -74,7 +79,7 @@ namespace ValheimTwitch.GUI
         public void SetReward(Twitch.API.Helix.Reward reward)
         {
             text.text = reward.Title;
-            bgImage.color = HexToColor(reward.BackgroundColor);
+            button.image.color = HexToColor(reward.BackgroundColor);
 
             if (text.text.Length > 15)
             {

@@ -15,11 +15,11 @@ namespace ValheimTwitch.GUI
 
             var rect = goMainPanel.AddComponent<RectTransform>();
 
-            rect.sizeDelta = new Vector2(400, 400);
+            rect.sizeDelta = new Vector2(380, 380);
             rect.anchorMin = new Vector2(0.0f, 0.5f);
             rect.anchorMax = new Vector2(0.0f, 0.5f);
-            rect.offsetMin = new Vector2(0.0f, -200.0f);
-            rect.offsetMax = new Vector2(400.0f, 200.0f);
+            rect.offsetMin = new Vector2(0.0f, -190.0f);
+            rect.offsetMax = new Vector2(380.0f, 190.0f);
 
             rect.Translate(280, 0, 0);
 
@@ -36,39 +36,38 @@ namespace ValheimTwitch.GUI
             grid.padding = new RectOffset(20, 20, 20, 20);
             grid.spacing = new Vector2(20, 20);
 
+
             foreach (Twitch.API.Helix.Reward reward in Plugin.Instance.twitchRewards.Data)
             {
                 Log.Info($"Reward: {reward.Title}");
 
                 var item = grid.transform.gameObject.AddComponent<RewardItem>();
 
+                item.button.onClick.AddListener(() => Log.Info($"Clicked on {reward.Title}"));
+
                 item.SetReward(reward);
             }
 
-            //
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
+            // drop down
+            var dropdown = goMainPanel.AddComponent<CustomDropdown>();
 
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
+            for (int i = 1; i < 25; i++)
+            {
+                var item = dropdown.AddOption<OptionsItem>();
+                item.SetColor(new Color32(127, 127, 127, 127));
+                item.SetLabel($"Label {i}");
+                item.SetValue($"Value {i}");
 
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
+                item.OnClick(() =>
+                {
+                    dropdown.Toggle();
+                    dropdown.SetLabel(item.GetLabel());
+                    Log.Info($">>> {item.GetValue()}");
+                });
+            }
 
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-            //grid.transform.gameObject.AddComponent<RewardItem>();
-
+            // hide...
+            dropdown.options.Toggle();
             goMainPanel.SetActive(false);
         }
 

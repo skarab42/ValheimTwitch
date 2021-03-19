@@ -7,7 +7,7 @@ namespace ValheimTwitch.GUI.ScrollView
     {
         public VerticalScrollbar verticalScrollbar;
 
-        private GameObject goVerticalScrollView;
+        public GameObject goVerticalScrollView;
         private Viewport viewport;
 
         private void Awake()

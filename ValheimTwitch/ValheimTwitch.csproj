@@ -300,6 +300,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\CustomDropdown\DropdownOptions.cs" />
+    <Compile Include="GUI\CustomDropdown\DropdownSelect.cs" />
+    <Compile Include="GUI\CustomDropdown\CustomDropdown.cs" />
+    <Compile Include="GUI\CustomDropdown\DropdownButton.cs" />
+    <Compile Include="GUI\CustomDropdown\DropdownLabel.cs" />
+    <Compile Include="GUI\CustomDropdown\OptionsItem.cs" />
     <Compile Include="GUI\RewardItem.cs" />
     <Compile Include="GUI\MainPanel.cs" />
     <Compile Include="GUI\ScrollView\SlidingArea.cs" />
