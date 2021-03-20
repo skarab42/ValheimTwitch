@@ -304,9 +304,11 @@
     <Compile Include="Actions\NoneAction.cs" />
     <Compile Include="Actions\PrintCenterMessageAction.cs" />
     <Compile Include="Actions\PrintTopLeftMessageAction.cs" />
+    <Compile Include="Actions\SpawnBoarHordAction.cs" />
     <Compile Include="Actions\SpawnTrollAction.cs" />
     <Compile Include="Actions\SpawnHuginAction.cs" />
     <Compile Include="Actions\SpawnMuninAction.cs" />
+    <Compile Include="Helpers\Prefab.cs" />
     <Compile Include="Patches\ConsolePatch.cs" />
     <Compile Include="Patches\Raven.cs" />
     <Compile Include="GUI\CustomDropdown\DropdownOptions.cs" />

@@ -14,14 +14,15 @@ namespace ValheimTwitch.Events
 
     public static class Actions
     {
-        public enum Types
+        public enum Types : int
         {
-            None,
-            SpawnHugin,
-            SpawnMunin,
-            SpawnTroll,
-            PrintCenterMessage,
-            PrintTopLeftMessage
+            None = 0,
+            SpawnHugin = 1,
+            SpawnMunin = 2,
+            SpawnTroll = 3,
+            SpawnBoarHord = 4,
+            PrintCenterMessage = 100,
+            PrintTopLeftMessage = 101
         }
         
         private static Dictionary<int, string> names = new Dictionary<int, string>
@@ -29,7 +30,8 @@ namespace ValheimTwitch.Events
             { (int)Types.None, "None" },
             { (int)Types.SpawnHugin, "Spawn Hugin" },
             { (int)Types.SpawnMunin, "Spawn Munin" },
-            { (int)Types.SpawnTroll, "Spawn Troll" },
+            { (int)Types.SpawnTroll, "Spawn troll" },
+            { (int)Types.SpawnBoarHord, "Spawn boar hord" },
             { (int)Types.PrintCenterMessage, "Print center message" },
             { (int)Types.PrintTopLeftMessage, "Print top left message" }
         };
@@ -40,6 +42,7 @@ namespace ValheimTwitch.Events
             { (int)Types.SpawnHugin, new SpawnHuginAction() },
             { (int)Types.SpawnMunin, new SpawnMuninAction() },
             { (int)Types.SpawnTroll, new SpawnTrollAction() },
+            { (int)Types.SpawnBoarHord, new SpawnBoarHordAction() },
             { (int)Types.PrintCenterMessage, new PrintCenterMessageAction() },
             { (int)Types.PrintTopLeftMessage, new PrintTopLeftMessageAction() }
         };
