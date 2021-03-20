@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ValheimTwitch.Patches
 {
     [HarmonyPatch(typeof(Player), "Load")]
-    public static class LoadPatch
+    public static class PlayerLoadPatch
     {
         public static void Postfix(ref HashSet<string> ___m_shownTutorials)
         {
@@ -18,7 +18,7 @@ namespace ValheimTwitch.Patches
     }
 
     [HarmonyPatch(typeof(Player), "OnSpawned")]
-    public static class OnSpawnedPatch
+    public static class PlayerOnSpawnedPatch
     {
         public static void Postfix(ref HashSet<string> ___m_shownTutorials)
         {

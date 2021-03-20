@@ -1,5 +1,4 @@
 ﻿using ValheimTwitch.Patches;
-using ValheimTwitch.Twitch.API.Helix;
 using ValheimTwitch.Twitch.PubSub.Messages;
 
 namespace ValheimTwitch.Events

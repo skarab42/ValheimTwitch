@@ -19,6 +19,7 @@ namespace ValheimTwitch.Events
             None,
             SpawnHugin,
             SpawnMunin,
+            SpawnTroll,
             PrintCenterMessage,
             PrintTopLeftMessage
         }
@@ -28,6 +29,7 @@ namespace ValheimTwitch.Events
             { (int)Types.None, "None" },
             { (int)Types.SpawnHugin, "Spawn Hugin" },
             { (int)Types.SpawnMunin, "Spawn Munin" },
+            { (int)Types.SpawnTroll, "Spawn Troll" },
             { (int)Types.PrintCenterMessage, "Print center message" },
             { (int)Types.PrintTopLeftMessage, "Print top left message" }
         };
@@ -37,6 +39,7 @@ namespace ValheimTwitch.Events
             { (int)Types.None, new NoneAction() },
             { (int)Types.SpawnHugin, new SpawnHuginAction() },
             { (int)Types.SpawnMunin, new SpawnMuninAction() },
+            { (int)Types.SpawnTroll, new SpawnTrollAction() },
             { (int)Types.PrintCenterMessage, new PrintCenterMessageAction() },
             { (int)Types.PrintTopLeftMessage, new PrintTopLeftMessageAction() }
         };

@@ -74,7 +74,7 @@ namespace ValheimTwitch
 
             TwitchConnect();
 
-            StartPatch.UpdateMainButonText();
+            FejdStartupStartPatch.UpdateMainButonText();
         }
 
         public User GetUser()

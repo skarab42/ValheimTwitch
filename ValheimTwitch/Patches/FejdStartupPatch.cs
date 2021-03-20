@@ -4,7 +4,7 @@ using ValheimTwitch.GUI;
 namespace ValheimTwitch.Patches
 {
     [HarmonyPatch(typeof(FejdStartup), "Start")]
-    public static class StartPatch
+    public static class FejdStartupStartPatch
     {
         private static ValeimTwitchStartup startup;
 
