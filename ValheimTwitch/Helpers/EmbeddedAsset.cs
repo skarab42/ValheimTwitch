@@ -38,6 +38,25 @@ namespace ValheimTwitch.Helpers
             return false;
         }
 
+        public static AssetBundle LoadAssetBundle(string assetPath)
+        {
+            Stream fileStream = LoadEmbeddedAsset(assetPath);
+
+            if (fileStream != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    fileStream.CopyTo(memoryStream);
+                    var ret = AssetBundle.LoadFromMemory(memoryStream.ToArray());
+                    fileStream.Dispose();
+
+                    return ret;
+                }
+            }
+
+            return null;
+        }
+
         public static Texture2D LoadTexture2D(string assetPath)
         {
             Texture2D texture = null;

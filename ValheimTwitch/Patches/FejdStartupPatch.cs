@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using ValheimTwitch.GUI;
+using ValheimTwitch.Helpers;
 
 namespace ValheimTwitch.Patches
 {
@@ -21,33 +22,29 @@ namespace ValheimTwitch.Patches
 
             startup.startGui.mainButton.button.onClick.AddListener(OnMainButtonClick);
 
-            var myLoadedAssetBundle
-            = AssetBundle.LoadFromFile(Path.Combine(Paths.PluginPath, "ValheimTwitch", "valheimtwitchgui"));
-            if (myLoadedAssetBundle == null)
+            var bundle = EmbeddedAsset.LoadAssetBundle("Assets.valheimtwitchgui");
+
+            if (bundle == null)
             {
                 Debug.Log("Failed to load AssetBundle!");
                 return;
             }
 
-            var prefab = myLoadedAssetBundle.LoadAsset<GameObject>("Valheim Twitch GUI");
+            var prefab = bundle.LoadAsset<GameObject>("Valheim Twitch GUI");
 
             if (!prefab)
             {
                 Log.Info($"Prefab not found!!!");
+                return;
             }
-            else
+            
+            var gui = Object.Instantiate(prefab);
+            var guiScript = gui.GetComponent<ValheimTwitchGUIScript>();
+
+            guiScript.mainButton.onClick.AddListener(() =>
             {
-                Log.Info($"Prefab ----> {prefab.name}");
-                var gui = Object.Instantiate(prefab);
-
-                var button = gui.GetComponentInChildren<Button>();
-
-                button.onClick.AddListener(() =>
-                {
-                    Log.Info("Prout prout prout !");
-                });
-            }
-
+                Log.Info("Prout prout prout !");
+            });
         }
 
         private static void OnMainButtonClick()

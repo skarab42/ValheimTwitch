@@ -292,6 +292,10 @@
     <Reference Include="UrlMatcher, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\UrlMatcher.1.0.0.1\lib\net452\UrlMatcher.dll</HintPath>
     </Reference>
+    <Reference Include="ValheimTwitchGUI">
+      <HintPath>Assets\ValheimTwitchGUI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WatsonWebserver, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Watson.4.1.2\lib\netstandard2.0\WatsonWebserver.dll</HintPath>
     </Reference>
@@ -363,6 +367,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <EmbeddedResource Include="Assets\valheimtwitchgui" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -391,6 +396,9 @@
     <EmbeddedResource Include="Assets\System.Runtime.Serialization.dll" />
     <EmbeddedResource Include="Assets\UrlMatcher.dll" />
     <EmbeddedResource Include="Assets\WatsonWebserver.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\ValheimTwitchGUI.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

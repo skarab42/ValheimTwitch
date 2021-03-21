@@ -45,6 +45,7 @@ namespace ValheimTwitch
             EmbeddedAsset.LoadAssembly("Assets.RegexMatcher.dll");
             EmbeddedAsset.LoadAssembly("Assets.System.Runtime.Serialization.dll");
             EmbeddedAsset.LoadAssembly("Assets.UrlMatcher.dll");
+            EmbeddedAsset.LoadAssembly("Assets.ValheimTwitchGUI.dll");
             EmbeddedAsset.LoadAssembly("Assets.WatsonWebserver.dll");
             EmbeddedAsset.LoadAssembly("Assets.websocket-sharp.dll");
         }
