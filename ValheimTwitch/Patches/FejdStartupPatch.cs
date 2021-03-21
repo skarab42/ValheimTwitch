@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using ValheimTwitch.GUI;
 using ValheimTwitch.Helpers;
 
@@ -11,43 +12,21 @@ namespace ValheimTwitch.Patches
     {
         public static GameObject gui;
         public static ValheimTwitchGUIScript guiScript;
-
-        private static ValeimTwitchStartup startup;
         
         public static void Postfix(FejdStartup __instance)
         {
             var mainGui = __instance.transform.parent.gameObject;
-            startup = mainGui.AddComponent<ValeimTwitchStartup>();
-
-            UpdateMainButonText();
-
-            startup.startGui.mainButton.button.onClick.AddListener(OnMainButtonClick);
-
             var bundle = EmbeddedAsset.LoadAssetBundle("Assets.valheimtwitchgui");
-
-            if (bundle == null)
-            {
-                Debug.Log("Failed to load AssetBundle!");
-                return;
-            }
-
             var prefab = bundle.LoadAsset<GameObject>("Valheim Twitch GUI");
 
-            if (!prefab)
-            {
-                Log.Info($"Prefab not found!!!");
-                return;
-            }
-
             gui = UnityEngine.Object.Instantiate(prefab);
+            gui.transform.SetParent(mainGui.transform);
+
             guiScript = gui.GetComponent<ValheimTwitchGUIScript>();
 
-            guiScript.mainButton.onClick.AddListener(() =>
-            {
-                Log.Info("Prout prout prout !");
-                guiScript.ToggleGUI();
-            });
+            guiScript.mainButton.onClick.AddListener(OnMainButtonClick);
 
+            UpdateMainButonText();
             UpdateRewardGrid();
         }
 
@@ -56,7 +35,7 @@ namespace ValheimTwitch.Patches
             if (Plugin.Instance.GetUser() == null)
                 Plugin.Instance.TwitchAuth();
             else
-                startup.startGui.mainPanel.ToggleActive();
+                guiScript.ToggleGUI();
         }
 
         public static void UpdateMainButonText()
@@ -65,11 +44,11 @@ namespace ValheimTwitch.Patches
 
             if (user == null)
             {
-                startup.startGui.SetMainButtonText("Connexion");
+                guiScript.SetMainButtonText("Connexion");
             }
             else
             {
-                startup.startGui.SetMainButtonText(user.DisplayName);
+                guiScript.SetMainButtonText(user.DisplayName);
             }
         }
 
@@ -92,11 +71,17 @@ namespace ValheimTwitch.Patches
                         title = title.Substring(0, 25).TrimEnd() + ". . .";
                     }
 
-                    var texture = TextureLoader.LoadFromURL((reward.Image ?? reward.DefaultImage).Url2x);
+                    var texture = TextureLoader.LoadFromURL((reward.Image ?? reward.DefaultImage).Url4x);
 
                     Log.Info($"Sprit -> {texture.width} x {texture.height}");
 
                     var item = guiScript.AddReward(title, color, texture);
+                    var button = item.GetComponent<Button>();
+
+                    button.onClick.AddListener(() =>
+                    {
+                        guiScript.ShowPanel("Reward Settings Panel");
+                    });
                 }
                 catch (Exception)
                 {
