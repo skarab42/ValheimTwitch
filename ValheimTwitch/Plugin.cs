@@ -133,6 +133,11 @@ namespace ValheimTwitch
             }
         }
 
+        public void UpdateRwardsList()
+        {
+            twitchRewards = twitchClient.GetRewards();
+        }
+
         private void OnMaxReconnect(object sender, Twitch.PubSub.MaxReconnectErrorArgs e)
         {
             Log.Info($"OnMaxReconnect: {e.Message}");

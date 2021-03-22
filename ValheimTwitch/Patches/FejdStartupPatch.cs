@@ -24,6 +24,10 @@ namespace ValheimTwitch.Patches
             guiScript = gui.GetComponent<ValheimTwitchGUIScript>();
 
             guiScript.mainButton.OnClick(() => OnMainButtonClick());
+            guiScript.refreshRewardButton.OnClick(() => {
+                Plugin.Instance.UpdateRwardsList();
+                UpdateRewardGrid();
+            });
 
             UpdateMainButonText();
             UpdateRewardGrid();
@@ -46,6 +50,8 @@ namespace ValheimTwitch.Patches
 
         private static void UpdateRewardGrid()
         {
+            guiScript.rewardGrid.Clear();
+
             foreach (Twitch.API.Helix.Reward reward in Plugin.Instance.twitchRewards.Data)
             {
                 try
