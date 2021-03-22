@@ -2,7 +2,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using ValheimTwitch.GUI;
 using ValheimTwitch.Helpers;
 
 namespace ValheimTwitch.Patches
@@ -24,7 +23,7 @@ namespace ValheimTwitch.Patches
 
             guiScript = gui.GetComponent<ValheimTwitchGUIScript>();
 
-            guiScript.mainButton.onClick.AddListener(OnMainButtonClick);
+            guiScript.mainButton.OnClick(() => OnMainButtonClick());
 
             UpdateMainButonText();
             UpdateRewardGrid();
@@ -35,21 +34,14 @@ namespace ValheimTwitch.Patches
             if (Plugin.Instance.GetUser() == null)
                 Plugin.Instance.TwitchAuth();
             else
-                guiScript.ToggleGUI();
+                guiScript.mainPanel.ToggleActive();
         }
 
         public static void UpdateMainButonText()
         {
             var user = Plugin.Instance.GetUser();
 
-            if (user == null)
-            {
-                guiScript.SetMainButtonText("Connexion");
-            }
-            else
-            {
-                guiScript.SetMainButtonText(user.DisplayName);
-            }
+            guiScript?.mainButton.SetText(user == null ? "Connexion" : user.DisplayName);
         }
 
         private static void UpdateRewardGrid()
@@ -75,16 +67,17 @@ namespace ValheimTwitch.Patches
 
                     Log.Info($"Sprit -> {texture.width} x {texture.height}");
 
-                    var item = guiScript.AddReward(title, color, texture);
+                    var item = guiScript.rewardGrid.Add(title, color, texture);
                     var button = item.GetComponent<Button>();
 
                     button.onClick.AddListener(() =>
                     {
-                        guiScript.ShowPanel("Reward Settings Panel");
+                        //guiScript.ShowPanel("Reward Settings Panel");
                     });
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Log.Error(e.ToString());
                     Log.Warning($"Reward image unavailable: {reward.Title}");
                 }
 
@@ -111,10 +104,6 @@ namespace ValheimTwitch.Patches
                 //item.SetReward(reward);
             }
         }
-
-        
-
-        
     }
 }
 

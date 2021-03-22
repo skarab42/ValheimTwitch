@@ -292,9 +292,9 @@
     <Reference Include="UrlMatcher, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\UrlMatcher.1.0.0.1\lib\net452\UrlMatcher.dll</HintPath>
     </Reference>
-    <Reference Include="ValheimTwitchGUI">
+    <Reference Include="ValheimTwitchGUI, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>Assets\ValheimTwitchGUI.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WatsonWebserver, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Watson.4.1.2\lib\netstandard2.0\WatsonWebserver.dll</HintPath>
