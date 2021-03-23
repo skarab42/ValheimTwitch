@@ -73,7 +73,8 @@ namespace ValheimTwitch.Patches
 
                     Log.Info($"Sprit -> {texture.width} x {texture.height}");
 
-                    var item = guiScript.rewardGrid.Add(title, color, texture);
+                    var rewardGridItem = new RewardGridItem(reward.Id, title, color, texture);
+                    var item = guiScript.rewardGrid.Add(rewardGridItem);
                     var button = item.GetComponent<Button>();
 
                     button.onClick.AddListener(() =>
