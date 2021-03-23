@@ -1,7 +1,9 @@
 ﻿using HarmonyLib;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
+using ValheimTwitch.Events;
 using ValheimTwitch.Helpers;
 
 namespace ValheimTwitch.Patches
@@ -10,13 +12,14 @@ namespace ValheimTwitch.Patches
     public static class FejdStartupStartPatch
     {
         public static GameObject gui;
+        public static AssetBundle guiBundle;
         public static ValheimTwitchGUIScript guiScript;
-        
+
         public static void Postfix(FejdStartup __instance)
         {
-            var mainGui = __instance.transform.parent.gameObject;
-            var bundle = EmbeddedAsset.LoadAssetBundle("Assets.valheimtwitchgui");
-            var prefab = bundle.LoadAsset<GameObject>("Valheim Twitch GUI");
+            var mainGui = __instance.m_mainMenu;
+            guiBundle = guiBundle ?? EmbeddedAsset.LoadAssetBundle("Assets.valheimtwitchgui");
+            var prefab = guiBundle.LoadAsset<GameObject>("Valheim Twitch GUI");
 
             gui = UnityEngine.Object.Instantiate(prefab);
             gui.transform.SetParent(mainGui.transform);
@@ -28,6 +31,12 @@ namespace ValheimTwitch.Patches
                 Plugin.Instance.UpdateRwardsList();
                 UpdateRewardGrid();
             });
+
+            var actions = Actions.GetActionNames();
+            var options = new List<string>(actions.Values);
+
+            guiScript.rewardActionsDropdown.AddOptions(options);
+            guiScript.rewardActionsDropdown.onValueChanged.AddListener(OnActionsDropdownChanged);
 
             UpdateMainButonText();
             UpdateRewardGrid();
@@ -61,55 +70,42 @@ namespace ValheimTwitch.Patches
 
                     Log.Info($"Reward: {reward.Title}");
 
-                    var title = reward.Title;
-                    var color = Colors.FromHex(reward.BackgroundColor);
+                    var actionIndex = 0;
+                    var actions = Actions.GetActionNames();
 
-                    if (title.Length > 25)
+                    if (PluginConfig.HasKey("reward-actions", reward.Id))
                     {
-                        title = title.Substring(0, 25).TrimEnd() + ". . .";
+                        var actionType = PluginConfig.GetInt("reward-actions", reward.Id);
+                        actionIndex = actions.Keys.ToList().IndexOf(actionType);
                     }
 
+                    var title = reward.Title;
+                    var color = Colors.FromHex(reward.BackgroundColor);
                     var texture = TextureLoader.LoadFromURL((reward.Image ?? reward.DefaultImage).Url4x);
+                    var rewardGridItem = new RewardGridItem(reward.Id, title, color, texture, actionIndex);
 
-                    Log.Info($"Sprit -> {texture.width} x {texture.height}");
-
-                    var rewardGridItem = new RewardGridItem(reward.Id, title, color, texture);
-                    var item = guiScript.rewardGrid.Add(rewardGridItem);
-                    var button = item.GetComponent<Button>();
-
-                    button.onClick.AddListener(() =>
-                    {
-                        //guiScript.ShowPanel("Reward Settings Panel");
-                    });
+                    guiScript.rewardGrid.Add(rewardGridItem);
                 }
                 catch (Exception e)
                 {
                     Log.Error(e.ToString());
                     Log.Warning($"Reward image unavailable: {reward.Title}");
                 }
-
-
-                //item.button.onClick.AddListener(() => {
-                //    Log.Info($"Clicked on {reward.Title}");
-
-                //    selectedReward = reward;
-
-                //    dropdown.SetPrefix(reward.Title);
-                //    dropdown.Toggle();
-
-                //    if (PluginConfig.HasKey("reward-actions", reward.Id))
-                //    {
-                //        var value = PluginConfig.GetInt("reward-actions", reward.Id);
-                //        dropdown.SetLabel(Actions.GetActionName(value));
-                //    }
-                //    else
-                //    {
-                //        dropdown.SetLabel(Actions.GetActionName(Actions.Types.None));
-                //    }
-                //});
-
-                //item.SetReward(reward);
             }
+        }
+
+        private static void OnActionsDropdownChanged(int index)
+        {
+            var actions = Actions.GetActionNames();
+            var action = actions.ElementAt(index);
+            var reward = guiScript.rewardSettings.reward;
+
+            Log.Info($"Change -> {reward.title}");
+            Log.Info($"Action -> {action}");
+
+            reward.actionIndex = index;
+
+            PluginConfig.SetInt("reward-actions", reward.id, action.Key);
         }
     }
 }
