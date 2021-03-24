@@ -102,7 +102,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.CSharp">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
@@ -305,13 +307,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\Actions.cs" />
-    <Compile Include="Actions\NoneAction.cs" />
-    <Compile Include="Actions\PrintCenterMessageAction.cs" />
-    <Compile Include="Actions\PrintTopLeftMessageAction.cs" />
-    <Compile Include="Actions\SpawnBoarHordAction.cs" />
-    <Compile Include="Actions\SpawnTrollAction.cs" />
-    <Compile Include="Actions\SpawnHuginAction.cs" />
-    <Compile Include="Actions\SpawnMuninAction.cs" />
+    <Compile Include="Actions\HUDMessageAction.cs" />
+    <Compile Include="Actions\RavenMessageAction.cs" />
+    <Compile Include="Actions\SpawnCreatureAction.cs" />
+    <Compile Include="RewardsConfig.cs" />
     <Compile Include="Helpers\Colors.cs" />
     <Compile Include="Helpers\TextureLoader.cs" />
     <Compile Include="Helpers\Prefab.cs" />

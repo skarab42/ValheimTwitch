@@ -1,72 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using ValheimTwitch.Twitch.PubSub.Messages;
 
 namespace ValheimTwitch.Events
 {
-
-    abstract public class Action
-    {
-        public virtual void Run(Redemption redemption)
-        {
-            Log.Info($"Run -> {GetType().Name}");
-        }
-    }
+    // 0 None
+    // 1 RavenMessage  > <type>
+    // 2 SpawnCreature > <position>
+    // 3 HUDMessage    > <type> [level] [count] [distance]
 
     public static class Actions
     {
-        public enum Types : int
+        internal static void RunAction(Redemption redemption, JToken data)
         {
-            None = 0,
-            SpawnHugin = 1,
-            SpawnMunin = 2,
-            SpawnTroll = 3,
-            SpawnBoarHord = 4,
-            PrintCenterMessage = 100,
-            PrintTopLeftMessage = 101
-        }
-        
-        private static Dictionary<int, string> names = new Dictionary<int, string>
-        {
-            { (int)Types.None, "None" },
-            { (int)Types.SpawnHugin, "Spawn Hugin" },
-            { (int)Types.SpawnMunin, "Spawn Munin" },
-            { (int)Types.SpawnTroll, "Spawn troll" },
-            { (int)Types.SpawnBoarHord, "Spawn boar hord" },
-            { (int)Types.PrintCenterMessage, "Print center message" },
-            { (int)Types.PrintTopLeftMessage, "Print top left message" }
-        };
+            try
+            {
+                var type = data["Action"].Value<int>();
 
-        private static Dictionary<int, Action> actions = new Dictionary<int, Action>
-        {
-            { (int)Types.None, new NoneAction() },
-            { (int)Types.SpawnHugin, new SpawnHuginAction() },
-            { (int)Types.SpawnMunin, new SpawnMuninAction() },
-            { (int)Types.SpawnTroll, new SpawnTrollAction() },
-            { (int)Types.SpawnBoarHord, new SpawnBoarHordAction() },
-            { (int)Types.PrintCenterMessage, new PrintCenterMessageAction() },
-            { (int)Types.PrintTopLeftMessage, new PrintTopLeftMessageAction() }
-        };
+                Log.Info($"RunAction: {redemption.Reward.Id} -> type: {type}");
 
-        public static Dictionary<int, string> GetActionNames()
-        {
-            return names;
-        }
-
-        public static string GetActionName(Types type)
-        {
-            return names[(int)type];
-        }
-
-        public static string GetActionName(int type)
-        {
-            return names[type];
-        }
-
-        internal static void RunAction(Redemption redemption)
-        {
-            var type = PluginConfig.GetInt("reward-actions", redemption.Reward.Id);
-
-            actions[type].Run(redemption);
+                switch (type)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        RavenMessageAction.Run(redemption, data);
+                        break;
+                    case 2:
+                        SpawnCreatureAction.Run(redemption, data);
+                        break;
+                    case 3:
+                        HUDMessageAction.Run(redemption, data);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("RunAction Error >>> " + ex.ToString());
+            }
         }
     }
 }

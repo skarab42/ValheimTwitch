@@ -37,19 +37,16 @@ namespace ValheimTwitch.Helpers
 
                 if (!instance)
                 {
-                    Log.Error("Missing instance " + type);
+                    Log.Error("Missing prefab instance");
                     return;
                 }
 
                 var character = instance.GetComponent<Character>();
 
-                if (!character)
+                if (character && level > 0)
                 {
-                    Log.Error("Missing component " + type);
-                    return;
+                    character.SetLevel(level);
                 }
-
-                character.SetLevel(level);
             }
             catch (Exception ex)
             {

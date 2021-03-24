@@ -1,9 +1,6 @@
 ﻿using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using ValheimTwitch.Events;
 using ValheimTwitch.Helpers;
 
 namespace ValheimTwitch.Patches
@@ -32,14 +29,32 @@ namespace ValheimTwitch.Patches
                 UpdateRewardGrid();
             });
 
-            var actions = Actions.GetActionNames();
-            var options = new List<string>(actions.Values);
-
-            guiScript.rewardActionsDropdown.AddOptions(options);
-            guiScript.rewardActionsDropdown.onValueChanged.AddListener(OnActionsDropdownChanged);
+            guiScript.rewardSettings.OnSettingsChanged += OnRewardSettingschanged;
 
             UpdateMainButonText();
             UpdateRewardGrid();
+        }
+
+        private static void OnRewardSettingschanged(object sender, SettingsChangedArgs e)
+        {
+            var key = guiScript.rewardSettings.reward.id;
+
+            if (e.Data is RavenMessageData)
+            {
+                RewardsConfig.Set(key, e.Data as RavenMessageData);
+            }
+            else if (e.Data is SpawnCreatureData)
+            {
+                RewardsConfig.Set(key, e.Data as SpawnCreatureData);
+            }
+            else if (e.Data is HUDMessageData)
+            {
+                RewardsConfig.Set(key, e.Data as HUDMessageData);
+            }
+            else
+            {
+                RewardsConfig.Set(key, e.Data);
+            }
         }
 
         private static void OnMainButtonClick()
@@ -57,9 +72,14 @@ namespace ValheimTwitch.Patches
             guiScript?.mainButton.SetText(user == null ? "Connexion" : user.DisplayName);
         }
 
-        private static void UpdateRewardGrid()
+        public static void UpdateRewardGrid()
         {
-            guiScript.rewardGrid.Clear();
+            guiScript?.rewardGrid.Clear();
+
+            if (Plugin.Instance.twitchRewards == null)
+            {
+                return;
+            }
 
             foreach (Twitch.API.Helix.Reward reward in Plugin.Instance.twitchRewards.Data)
             {
@@ -71,13 +91,13 @@ namespace ValheimTwitch.Patches
                     Log.Info($"Reward: {reward.Title}");
 
                     var actionIndex = 0;
-                    var actions = Actions.GetActionNames();
+                    //var actions = Actions.GetActionNames();
 
-                    if (PluginConfig.HasKey("reward-actions", reward.Id))
-                    {
-                        var actionType = PluginConfig.GetInt("reward-actions", reward.Id);
-                        actionIndex = actions.Keys.ToList().IndexOf(actionType);
-                    }
+                    //if (PluginConfig.HasKey("reward-actions", reward.Id))
+                    //{
+                    //    var actionType = PluginConfig.GetInt("reward-actions", reward.Id);
+                    //    actionIndex = actions.Keys.ToList().IndexOf(actionType);
+                    //}
 
                     var title = reward.Title;
                     var color = Colors.FromHex(reward.BackgroundColor);
@@ -92,20 +112,6 @@ namespace ValheimTwitch.Patches
                     Log.Warning($"Reward image unavailable: {reward.Title}");
                 }
             }
-        }
-
-        private static void OnActionsDropdownChanged(int index)
-        {
-            var actions = Actions.GetActionNames();
-            var action = actions.ElementAt(index);
-            var reward = guiScript.rewardSettings.reward;
-
-            Log.Info($"Change -> {reward.title}");
-            Log.Info($"Action -> {action}");
-
-            reward.actionIndex = index;
-
-            PluginConfig.SetInt("reward-actions", reward.id, action.Key);
         }
     }
 }

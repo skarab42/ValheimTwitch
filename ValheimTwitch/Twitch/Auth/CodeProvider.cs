@@ -72,33 +72,40 @@ namespace ValheimTwitch.Twitch.Auth
 
         private async Task GetCodeRoute(HttpContext context)
         {
-            if (context.Request.Query.Elements.ContainsKey("error"))
+            try
             {
-                var message = context.Request.Query.Elements["error_description"].Replace("+", " ");
-                OnError?.Invoke(this, new CodeErrorArgs { Message = message });
-                await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, $"<i>{message}.</i>"), 401);
-            }
-            else if (context.Request.Query.Elements.ContainsKey("code"))
-            {
-                var code = context.Request.Query.Elements["code"];
-                var responseState = context.Request.Query.Elements["state"];
-
-                if (responseState != state)
+                if (context.Request.Query.Elements.ContainsKey("error"))
                 {
-                    var message = "Invalid auth state 🤡";
+                    var message = context.Request.Query.Elements["error_description"].Replace("+", " ");
                     OnError?.Invoke(this, new CodeErrorArgs { Message = message });
-                    await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, message), 401);
+                    await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, $"<i>{message}.</i>"), 401);
                 }
-                else
+                else if (context.Request.Query.Elements.ContainsKey("code"))
                 {
-                    OnCode?.Invoke(this, new CodeArgs { Code = code });
-                    await SendHTML(context, "Success", SUCCESS_MESSAGE, 200);
-                }
-            }
+                    var code = context.Request.Query.Elements["code"];
+                    var responseState = context.Request.Query.Elements["state"];
 
-            server.Stop();
-            server.Dispose();
-            server = null;
+                    if (responseState != state)
+                    {
+                        var message = "Invalid auth state 🤡";
+                        OnError?.Invoke(this, new CodeErrorArgs { Message = message });
+                        await SendHTML(context, "Error", String.Format(DENIED_MESSAGE, message), 401);
+                    }
+                    else
+                    {
+                        OnCode?.Invoke(this, new CodeArgs { Code = code });
+                        await SendHTML(context, "Success", SUCCESS_MESSAGE, 200);
+                    }
+                }
+
+                server.Stop();
+                server.Dispose();
+                server = null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("HTTP ERROR -> " + ex.ToString());
+            }
         }
     }
 }

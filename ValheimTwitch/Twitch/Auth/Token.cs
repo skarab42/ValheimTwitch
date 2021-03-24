@@ -29,6 +29,8 @@ namespace ValheimTwitch.Twitch.Auth
             return result;
         }
 
+        // public override bool CanWrite { get { return false; } }
+
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();

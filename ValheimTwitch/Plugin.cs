@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using HarmonyLib;
+using Newtonsoft.Json.Linq;
 using System;
 using ValheimTwitch.Events;
 using ValheimTwitch.Helpers;
@@ -26,6 +27,7 @@ namespace ValheimTwitch
             "channel:read:redemptions"
         };
 
+        public bool updateUI = false;
         public Rewards twitchRewards;
         public Twitch.API.Client twitchClient;
         public Twitch.PubSub.Client twitchPubSubClient;
@@ -48,6 +50,8 @@ namespace ValheimTwitch
             EmbeddedAsset.LoadAssembly("Assets.ValheimTwitchGUI.dll");
             EmbeddedAsset.LoadAssembly("Assets.WatsonWebserver.dll");
             EmbeddedAsset.LoadAssembly("Assets.websocket-sharp.dll");
+
+            PluginConfig.DeleteKey("twitchAuthToken");
         }
 
         public void Awake()
@@ -59,10 +63,9 @@ namespace ValheimTwitch
 
             instance = this;
 
-            if (PluginConfig.HasKey("twitch", "accessToken"))
-            {
-                TwitchConnect();
-            }
+            RewardsConfig.Load();
+
+            TwitchConnect();
 
             Harmony harmony = new Harmony(GUID);
             harmony.PatchAll();
@@ -70,12 +73,27 @@ namespace ValheimTwitch
 
         private void OnToken(object sender, TokenArgs e)
         {
-            PluginConfig.SetString("twitch", "accessToken", e.Token.AccessToken);
-            PluginConfig.SetString("twitch", "refreshToken", e.Token.RefreshToken);
+            PluginConfig.SetObject("twitchAuthToken", new {
+                accessToken = e.Token.AccessToken,
+                refreshToken = e.Token.RefreshToken
+            });
 
             TwitchConnect();
+            UpdateRwardsList();
 
-            FejdStartupStartPatch.UpdateMainButonText();
+            updateUI = true;
+        }
+
+        public void Update()
+        {
+            // TODO use action queue
+            if (updateUI)
+            {
+                FejdStartupStartPatch.UpdateRewardGrid();
+                FejdStartupStartPatch.UpdateMainButonText();
+
+                updateUI = false;
+            }
         }
 
         public User GetUser()
@@ -100,9 +118,6 @@ namespace ValheimTwitch
         {
             try
             {
-                var accessToken = PluginConfig.GetString("twitch", "accessToken");
-                var refreshToken = PluginConfig.GetString("twitch", "refreshToken");
-
                 var tokenProvider = new TokenProvider(
                     TWITCH_APP_CLIENT_ID,
                     TWITCH_REDIRECT_HOST,
@@ -113,7 +128,22 @@ namespace ValheimTwitch
                 tokenProvider.OnToken += OnToken;
                 tokenProvider.OnError += OnTokenError;
 
-                twitchClient = new Twitch.API.Client(TWITCH_APP_CLIENT_ID, accessToken, refreshToken, tokenProvider);
+                var token = PluginConfig.GetObject("twitchAuthToken");
+
+                if (token == null)
+                {
+                    twitchClient = new Twitch.API.Client(TWITCH_APP_CLIENT_ID, "", "", tokenProvider);
+                    return;
+                }
+
+                JToken accessToken;
+                JToken refreshToken;
+
+                token.TryGetValue("accessToken", out accessToken);
+                token.TryGetValue("refreshToken", out refreshToken);
+
+                twitchClient = new Twitch.API.Client(TWITCH_APP_CLIENT_ID, accessToken.Value<string>(), refreshToken.Value<string>(), tokenProvider);
+
                 twitchPubSubClient = new Twitch.PubSub.Client(twitchClient);
 
                 User user = twitchClient.GetUser();
@@ -135,7 +165,7 @@ namespace ValheimTwitch
 
         public void UpdateRwardsList()
         {
-            twitchRewards = twitchClient.GetRewards();
+            twitchRewards = twitchClient?.GetRewards();
         }
 
         private void OnMaxReconnect(object sender, Twitch.PubSub.MaxReconnectErrorArgs e)
@@ -149,10 +179,12 @@ namespace ValheimTwitch
 
             Log.Info($"OnRewardRedeemed: {reward.Title}");
 
-            if (PluginConfig.HasKey("reward-actions", reward.Id))
-            {
-                Actions.RunAction(e.Redemption);
-            }
+            var action = RewardsConfig.Get(reward.Id);
+
+            if (action == null)
+                return;
+
+            Actions.RunAction(e.Redemption, action);
         }
     }
 }

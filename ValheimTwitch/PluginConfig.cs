@@ -1,37 +1,71 @@
-﻿using UnityEngine;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace ValheimTwitch
 {
     static class PluginConfig
     {
-        private static string MakeKey(string group, string key)
+        private static string Key(string key)
         {
-            return $"{Plugin.GUID}.{group}.{key}";
+            return $"{Plugin.GUID}.{key}";
         }
 
-        public static bool HasKey(string group, string key)
+        public static bool HasKey(string key)
         {
-            return PlayerPrefs.HasKey(MakeKey(group, key));
+            return PlayerPrefs.HasKey(Key(key));
         }
 
-        public static string GetString(string group, string key)
+        public static void DeleteKey(string key)
         {
-            return PlayerPrefs.GetString(MakeKey(group, key));
+            PlayerPrefs.DeleteKey(Key(key));
         }
 
-        public static void SetString(string group, string key, string value)
+        public static void SetObject(string key, object obj)
         {
-            PlayerPrefs.SetString(MakeKey(group, key), value);
+            PlayerPrefs.SetString(Key(key), JsonConvert.SerializeObject(obj));
         }
 
-        public static int GetInt(string group, string key)
+        public static JObject GetObject(string key)
         {
-            return PlayerPrefs.GetInt(MakeKey(group, key));
+            if (PlayerPrefs.HasKey(Key(key)))
+            {
+                return JObject.Parse(PlayerPrefs.GetString(Key(key)));
+            }
+
+            return null;
         }
 
-        public static void SetInt(string group, string key, int value)
-        {
-            PlayerPrefs.SetInt(MakeKey(group, key), value);
-        }
+        // OLD ----------
+
+        //private static string MakeKey(string group, string key)
+        //{
+        //    return $"{Plugin.GUID}.{group}.{key}";
+        //}
+
+        //public static bool HasKey(string group, string key)
+        //{
+        //    return PlayerPrefs.HasKey(MakeKey(group, key));
+        //}
+
+        //public static string GetString(string group, string key)
+        //{
+        //    return PlayerPrefs.GetString(MakeKey(group, key));
+        //}
+
+        //public static void SetString(string group, string key, string value)
+        //{
+        //    PlayerPrefs.SetString(MakeKey(group, key), value);
+        //}
+
+        //public static int GetInt(string group, string key)
+        //{
+        //    return PlayerPrefs.GetInt(MakeKey(group, key));
+        //}
+
+        //public static void SetInt(string group, string key, int value)
+        //{
+        //    PlayerPrefs.SetInt(MakeKey(group, key), value);
+        //}
     }
 }
