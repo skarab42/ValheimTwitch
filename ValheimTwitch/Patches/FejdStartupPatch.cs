@@ -55,6 +55,8 @@ namespace ValheimTwitch.Patches
             {
                 RewardsConfig.Set(key, e.Data);
             }
+
+            UpdateRewardGrid();
         }
 
         private static void OnMainButtonClick()
@@ -90,19 +92,11 @@ namespace ValheimTwitch.Patches
 
                     Log.Info($"Reward: {reward.Title}");
 
-                    var actionIndex = 0;
-                    //var actions = Actions.GetActionNames();
-
-                    //if (PluginConfig.HasKey("reward-actions", reward.Id))
-                    //{
-                    //    var actionType = PluginConfig.GetInt("reward-actions", reward.Id);
-                    //    actionIndex = actions.Keys.ToList().IndexOf(actionType);
-                    //}
-
                     var title = reward.Title;
+                    var data = RewardsConfig.Get(reward.Id);
                     var color = Colors.FromHex(reward.BackgroundColor);
                     var texture = TextureLoader.LoadFromURL((reward.Image ?? reward.DefaultImage).Url4x);
-                    var rewardGridItem = new RewardGridItem(reward.Id, title, color, texture, actionIndex);
+                    var rewardGridItem = new RewardGridItem(reward.Id, title, color, texture, data);
 
                     guiScript.rewardGrid.Add(rewardGridItem);
                 }

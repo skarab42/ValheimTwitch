@@ -51,7 +51,8 @@ namespace ValheimTwitch
             EmbeddedAsset.LoadAssembly("Assets.WatsonWebserver.dll");
             EmbeddedAsset.LoadAssembly("Assets.websocket-sharp.dll");
 
-            PluginConfig.DeleteKey("twitchAuthToken");
+            //PluginConfig.DeleteKey("twitchAuthToken");
+            //PluginConfig.DeleteKey("rewards");
         }
 
         public void Awake()
