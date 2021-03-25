@@ -6,7 +6,7 @@ WIP project developed [on Twitch](https://twitch.tv/skarab42). Follow [my channe
 
 # Features
 
-- In game Twitch authentification.
+- In game Twitch authentication.
 - Print a message in the HUD (center or top left).
 - Send a message to the brodcaster via Hugin (the crow in the tutorial). 
 - Spawn different entity (more or less aggressive, Troll, Boar, etc..) configurable in the game by the brodcaster.
