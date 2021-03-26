@@ -22,23 +22,10 @@ namespace ValheimTwitch.Patches
     {
         public static void Postfix(ref HashSet<string> ___m_shownTutorials)
         {
-            // Show plugin intro
-            Tutorial.TutorialText modIntro = new Tutorial.TutorialText()
-            {
-                m_name = $"{Plugin.GUID}_intro",
-                m_label = $"Welcome to {Plugin.NAME}",
-                m_topic = $"Welcome to {Plugin.NAME}",
-                m_text = "Follow me on twitch.tv/skarab42",
-            };
+            if (Plugin.Instance.twitchClient != null && Plugin.Instance.twitchClient.IsFollowing())
+                return;
 
-            if (!Tutorial.instance.m_texts.Contains(modIntro))
-            {
-                UnityEngine.Debug.Log($"Add text {modIntro.m_label}");
-
-                Tutorial.instance.m_texts.Add(modIntro);
-            }
-
-            Player.m_localPlayer.ShowTutorial(modIntro.m_name);
+            RavenPatch.Message($"Welcome to {Plugin.NAME}", "Follow me on twitch.tv/skarab42 to get rid of this message ;)", false);
         }
     }
 

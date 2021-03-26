@@ -319,6 +319,9 @@
     <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="PluginConfig.cs" />
     <Compile Include="Patches\ObjectStateExtensions.cs" />
+    <Compile Include="Twitch\API\Helix\CustomRewardException.cs" />
+    <Compile Include="Twitch\API\Helix\CustomRewardResponse.cs" />
+    <Compile Include="Twitch\API\Helix\FollowsResponse.cs" />
     <Compile Include="Twitch\API\Helix\Reward.cs" />
     <Compile Include="Twitch\API\Helix\Rewards.cs" />
     <Compile Include="Twitch\Auth\TokenProvider.cs" />

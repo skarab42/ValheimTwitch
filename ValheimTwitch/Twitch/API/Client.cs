@@ -1,36 +1,15 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.IO;
 using System.Net;
 using UnityEngine;
+using ValheimTwitch.Twitch.API.Helix;
 using ValheimTwitch.Twitch.Auth;
 
 namespace ValheimTwitch.Twitch.API
 {
-    public class CustomRewardException : Exception
-    {
-        public CustomRewardResponse response;
-
-        public CustomRewardException(CustomRewardResponse response) : base(response.Message) {
-            this.response = response;
-        }
-    }
-
-    public class CustomRewardResponse
-    {
-        [JsonProperty("error")]
-        public string Error { get; set; }
-
-        [JsonProperty("status")]
-        public int Status { get; set; }
-
-        [JsonProperty("message")]
-        public string Message { get; set; }
-    }
-
     public class Client
     {
-        public Helix.User user;
+        public User user;
         public TokenProvider tokenProvider;
         public readonly Credentials credentials;
 
@@ -113,7 +92,7 @@ namespace ValheimTwitch.Twitch.API
             }
         }
 
-        public Helix.User GetUser(bool force = false)
+        public User GetUser(bool force = false)
         {
             if (user != null && force == false)
             {
@@ -122,7 +101,7 @@ namespace ValheimTwitch.Twitch.API
 
             string json = Get($"{helixURL}/users");
 
-            var users = JsonConvert.DeserializeObject<Helix.Users>(json);
+            var users = JsonConvert.DeserializeObject<Users>(json);
 
             user = users.Data[0];
 
@@ -139,16 +118,24 @@ namespace ValheimTwitch.Twitch.API
             return credentials.accessToken;
         }
 
-        public Helix.Rewards GetRewards()
+        public Rewards GetRewards()
         {
             string json = Get($"{helixURL}/channel_points/custom_rewards?broadcaster_id={user.Id}");
 
-            return JsonConvert.DeserializeObject<Helix.Rewards>(json);
+            return JsonConvert.DeserializeObject<Rewards>(json);
+        }
+
+        public bool IsFollowing()
+        {
+            string json = Get($"{helixURL}/users/follows?to_id={Plugin.TWITCH_SKARAB42_ID}&from_id={user.Id}");
+            var follower = JsonConvert.DeserializeObject<FollowsResponse>(json);
+
+            return follower?.Total == 1;
         }
 
         public string CreateCustomReward(NewRewardArgs reward)
         {
-            var color = UnityEngine.Random.ColorHSV(0f, 1f, 0.6f, 0.7f, 0.4f, 0.5f);
+            var color = Random.ColorHSV(0f, 1f, 0.6f, 0.7f, 0.4f, 0.5f);
             var hexColor = "#" + ColorUtility.ToHtmlStringRGB(color);
             var url = $"{helixURL}/channel_points/custom_rewards?broadcaster_id={user.Id}";
             var query = $"title={reward.Title}&cost={reward.Cost}&prompt={reward.Prompt}&is_user_input_required={reward.IsUserInputRequired}&background_color={hexColor}";

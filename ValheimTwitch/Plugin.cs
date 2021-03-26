@@ -20,6 +20,7 @@ namespace ValheimTwitch
 
         public const string TWITCH_APP_CLIENT_ID = "5b9v1vm0jv7kx9afpmz0ylb3lp7k9w";
         public const string TWITCH_REDIRECT_HOST = "localhost";
+        public const string TWITCH_SKARAB42_ID = "485824438"; //"18615783"; //
         public const int TWITCH_REDIRECT_PORT = 42224;
 
         public static readonly string[] TWITCH_SCOPES = {
@@ -156,8 +157,9 @@ namespace ValheimTwitch
 
                 User user = twitchClient.GetUser();
                 twitchRewards = twitchClient.GetRewards();
+                var isFollowing = twitchClient.IsFollowing();
 
-                Log.Info($"Twitch User: {user.Login}");
+                Log.Info($"Twitch User: {user.Login} (follow: {isFollowing})");
 
                 twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
                 twitchPubSubClient.OnMaxReconnect += OnMaxReconnect;

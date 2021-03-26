@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 using ValheimTwitch.Helpers;
-using ValheimTwitch.Twitch.API;
+using ValheimTwitch.Twitch.API.Helix;
 
 namespace ValheimTwitch.Patches
 {
