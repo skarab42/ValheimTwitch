@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using ValheimTwitch.Helpers;
+using ValheimTwitch.Twitch.API;
 
 namespace ValheimTwitch.Patches
 {
@@ -30,9 +31,32 @@ namespace ValheimTwitch.Patches
             });
 
             guiScript.rewardSettings.OnSettingsChanged += OnRewardSettingschanged;
+            guiScript.addRewardForm.OnSave += OnNewRewardSave;
 
             UpdateMainButonText();
             UpdateRewardGrid();
+        }
+
+        private static void OnNewRewardSave(object sender, NewRewardArgs reward)
+        {
+            try
+            {
+                Plugin.Instance.twitchClient.CreateCustomReward(reward);
+                Plugin.Instance.UpdateRwardsList();
+                guiScript.addRewardForm.Hide();
+                UpdateRewardGrid();
+            }
+            catch(CustomRewardException e)
+            {
+                var message = e.Message;
+
+                if (message == "CREATE_CUSTOM_REWARD_DUPLICATE_REWARD")
+                {
+                    message = "A reward with the same name already exists on your account.";
+                }
+
+                guiScript.addRewardForm.error.Show(message);
+            }
         }
 
         private static void OnRewardSettingschanged(object sender, SettingsChangedArgs e)

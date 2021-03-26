@@ -16,7 +16,7 @@ namespace ValheimTwitch
         public const string GUID = "dev.skarab42.valheim.twitch";
         public const string NAME = "Valheim Twitch";
         public const string LABEL = "ValheimTwitch";
-        public const string VERSION = "0.1.0";
+        public const string VERSION = "1.2.0";
 
         public const string TWITCH_APP_CLIENT_ID = "5b9v1vm0jv7kx9afpmz0ylb3lp7k9w";
         public const string TWITCH_REDIRECT_HOST = "localhost";
@@ -24,7 +24,8 @@ namespace ValheimTwitch
 
         public static readonly string[] TWITCH_SCOPES = {
             "user:read:email",
-            "channel:read:redemptions"
+            "channel:read:redemptions",
+            "channel:manage:redemptions"
         };
 
         public bool updateUI = false;
@@ -50,6 +51,12 @@ namespace ValheimTwitch
             EmbeddedAsset.LoadAssembly("Assets.ValheimTwitchGUI.dll");
             EmbeddedAsset.LoadAssembly("Assets.WatsonWebserver.dll");
             EmbeddedAsset.LoadAssembly("Assets.websocket-sharp.dll");
+
+            if (!PluginConfig.HasKey("channel:manage:redemptions"))
+            {
+                PluginConfig.DeleteKey("twitchAuthToken");
+                PluginConfig.SetString("channel:manage:redemptions", "ok");
+            }
 
             //PluginConfig.DeleteKey("twitchAuthToken");
             //PluginConfig.DeleteKey("rewards");
