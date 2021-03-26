@@ -71,7 +71,7 @@ namespace ValheimTwitch.Twitch.API
                     client.Headers.Add($"Authorization: Bearer {credentials.accessToken}");
                     client.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
 
-                    return client.UploadString(url, query);
+                    return client.UploadString(url, "POST", query);
                 }
                 catch (WebException e)
                 {
@@ -88,6 +88,37 @@ namespace ValheimTwitch.Twitch.API
                     }
 
                     return Post(url, query, false);
+                }
+            }
+        }
+
+        public string Patch(string url, string query, bool refresh = true)
+        {
+            using (WebClient client = new WebClient())
+            {
+                try
+                {
+                    client.Headers.Add($"Client-Id: {credentials.clientId}");
+                    client.Headers.Add($"Authorization: Bearer {credentials.accessToken}");
+                    client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+
+                    return client.UploadString(url, "PATCH", query);
+                }
+                catch (WebException e)
+                {
+                    HttpWebResponse response = (HttpWebResponse)e.Response;
+
+                    if (refresh == false || response.StatusCode != HttpStatusCode.Unauthorized)
+                    {
+                        throw e;
+                    }
+
+                    if (tokenProvider.RefreshToken(this) == null)
+                    {
+                        throw e;
+                    }
+
+                    return Patch(url, query, false);
                 }
             }
         }
@@ -118,11 +149,16 @@ namespace ValheimTwitch.Twitch.API
             return credentials.accessToken;
         }
 
-        public Rewards GetRewards()
+        public Rewards GetRewards(bool custom = false)
         {
-            string json = Get($"{helixURL}/channel_points/custom_rewards?broadcaster_id={user.Id}");
+            string json = Get($"{helixURL}/channel_points/custom_rewards?broadcaster_id={user.Id}&only_manageable_rewards={custom}");
 
             return JsonConvert.DeserializeObject<Rewards>(json);
+        }
+
+        public Rewards GetCustomRewards()
+        {
+            return GetRewards(true);
         }
 
         public bool IsFollowing()
@@ -131,6 +167,37 @@ namespace ValheimTwitch.Twitch.API
             var follower = JsonConvert.DeserializeObject<FollowsResponse>(json);
 
             return follower?.Total == 1;
+        }
+
+        public string ToggleReward(string id, bool enabled)
+        {
+            try
+            {
+                var url = $"{helixURL}/channel_points/custom_rewards?broadcaster_id={user.Id}&id={id}";
+
+                return Patch(url, JsonConvert.SerializeObject(new { is_enabled = enabled }));
+            }
+            catch (WebException e)
+            {
+                HttpWebResponse response = (HttpWebResponse)e.Response;
+
+                if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    var reader = new StreamReader(e.Response.GetResponseStream());
+                    var json = reader.ReadToEnd();
+                    var message = JsonConvert.DeserializeObject<CustomRewardResponse>(json);
+
+                    throw new CustomRewardException(message);
+                }
+
+                if (response.StatusCode != HttpStatusCode.Unauthorized)
+                {
+                    throw e;
+                }
+
+                return null;
+            }
+
         }
 
         public string CreateCustomReward(NewRewardArgs reward)

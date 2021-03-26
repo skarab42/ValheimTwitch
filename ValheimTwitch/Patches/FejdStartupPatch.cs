@@ -102,25 +102,24 @@ namespace ValheimTwitch.Patches
         {
             guiScript?.rewardGrid.Clear();
 
-            if (Plugin.Instance.twitchRewards == null)
+            if (Plugin.Instance?.twitchRewards == null)
             {
                 return;
             }
 
-            foreach (Twitch.API.Helix.Reward reward in Plugin.Instance.twitchRewards.Data)
+            foreach (Reward reward in Plugin.Instance.twitchRewards.Data)
             {
                 try
                 {
-                    if (reward.IsEnabled == false)
-                        continue;
+                    var customReward = Plugin.Instance.twitchCustomRewards.Data.Exists(x => x.Id == reward.Id);
 
-                    Log.Info($"Reward: {reward.Title}");
+                    Log.Info($"Reward: {reward.Title} - custom: {customReward}");
 
                     var title = reward.Title;
                     var data = RewardsConfig.Get(reward.Id);
                     var color = Colors.FromHex(reward.BackgroundColor);
                     var texture = TextureLoader.LoadFromURL((reward.Image ?? reward.DefaultImage).Url4x);
-                    var rewardGridItem = new RewardGridItem(reward.Id, title, color, texture, data);
+                    var rewardGridItem = new RewardGridItem(reward.Id, title, color, texture, customReward, data);
 
                     guiScript.rewardGrid.Add(rewardGridItem);
                 }

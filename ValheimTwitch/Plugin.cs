@@ -2,6 +2,7 @@
 using HarmonyLib;
 using Newtonsoft.Json.Linq;
 using System;
+using UnityEngine.SceneManagement;
 using ValheimTwitch.Events;
 using ValheimTwitch.Helpers;
 using ValheimTwitch.Patches;
@@ -31,6 +32,7 @@ namespace ValheimTwitch
 
         public bool updateUI = false;
         public Rewards twitchRewards;
+        public Rewards twitchCustomRewards;
         public Twitch.API.Client twitchClient;
         public Twitch.PubSub.Client twitchPubSubClient;
 
@@ -75,6 +77,8 @@ namespace ValheimTwitch
             RewardsConfig.Load();
 
             TwitchConnect();
+
+            SceneManager.activeSceneChanged += OnSceneChanged;
 
             Harmony harmony = new Harmony(GUID);
             harmony.PatchAll();
@@ -156,10 +160,11 @@ namespace ValheimTwitch
                 twitchPubSubClient = new Twitch.PubSub.Client(twitchClient);
 
                 User user = twitchClient.GetUser();
-                twitchRewards = twitchClient.GetRewards();
                 var isFollowing = twitchClient.IsFollowing();
 
                 Log.Info($"Twitch User: {user.Login} (follow: {isFollowing})");
+
+                UpdateRwardsList();
 
                 twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
                 twitchPubSubClient.OnMaxReconnect += OnMaxReconnect;
@@ -175,7 +180,24 @@ namespace ValheimTwitch
 
         public void UpdateRwardsList()
         {
+            twitchCustomRewards = twitchClient?.GetCustomRewards();
             twitchRewards = twitchClient?.GetRewards();
+        }
+
+        private void OnSceneChanged(Scene current, Scene next)
+        {
+            if (twitchCustomRewards == null)
+                return;
+            
+            bool enable = next.name == "main";
+
+            //Log.Info($">>> OnSceneChanged: {current.name} -> {next.name}");
+
+            foreach (var reward in twitchCustomRewards.Data)
+            {
+                //Log.Info($">>> ToggleReward: {reward.Id} -> {enable}");
+                twitchClient.ToggleReward(reward.Id, enable);
+            }
         }
 
         private void OnMaxReconnect(object sender, Twitch.PubSub.MaxReconnectErrorArgs e)

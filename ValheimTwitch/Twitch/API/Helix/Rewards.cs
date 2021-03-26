@@ -14,6 +14,6 @@ namespace ValheimTwitch.Twitch.API.Helix
         }
 
         [JsonProperty("data")]
-        public IReadOnlyList<Reward> Data { get; }
+        public List<Reward> Data { get; }
     }
 }
