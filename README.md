@@ -17,7 +17,7 @@ WIP project developed [on Twitch](https://twitch.tv/skarab42). Follow [my channe
 # Install
 
 - Download and install [BepInExPack_Valheim](https://valheim.thunderstore.io/package/denikson/BepInExPack_Valheim/).
-- Download last release [ValheimTwitch-v1.1.0-beta](https://github.com/skarab42/ValheimTwitch/releases/download/v1.2.0/ValheimTwitch-v1.2.0.zip).
+- Download last release [ValheimTwitch-v1.2.0](https://github.com/skarab42/ValheimTwitch/releases/download/v1.2.0/ValheimTwitch-v1.2.0.zip).
 - Extract downloaded zip in `BepInEx/plugins` folder.
 - Run the game.
 - Enjoy!
