@@ -61,6 +61,7 @@ namespace ValheimTwitch
                 PluginConfig.SetString("channel:manage:redemptions", "ok");
             }
 
+            //PluginConfig.DeleteKey("channel:manage:redemptions"); 
             //PluginConfig.DeleteKey("twitchAuthToken");
             //PluginConfig.DeleteKey("rewards");
         }
@@ -184,20 +185,21 @@ namespace ValheimTwitch
             twitchRewards = twitchClient?.GetRewards();
         }
 
-        private void OnSceneChanged(Scene current, Scene next)
+        public void ToggleRewards(bool enable)
         {
             if (twitchCustomRewards == null)
                 return;
-            
-            bool enable = next.name == "main";
-
-            //Log.Info($">>> OnSceneChanged: {current.name} -> {next.name}");
 
             foreach (var reward in twitchCustomRewards.Data)
             {
                 //Log.Info($">>> ToggleReward: {reward.Id} -> {enable}");
                 twitchClient.ToggleReward(reward.Id, enable);
             }
+        }
+
+        private void OnSceneChanged(Scene current, Scene next)
+        {
+            ToggleRewards(next.name == "main");
         }
 
         private void OnMaxReconnect(object sender, Twitch.PubSub.MaxReconnectErrorArgs e)

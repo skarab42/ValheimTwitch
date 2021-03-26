@@ -310,6 +310,7 @@
     <Compile Include="Actions\HUDMessageAction.cs" />
     <Compile Include="Actions\RavenMessageAction.cs" />
     <Compile Include="Actions\SpawnCreatureAction.cs" />
+    <Compile Include="Patches\Game.cs" />
     <Compile Include="RewardsConfig.cs" />
     <Compile Include="Helpers\Colors.cs" />
     <Compile Include="Helpers\TextureLoader.cs" />

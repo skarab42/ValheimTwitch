@@ -113,7 +113,7 @@ namespace ValheimTwitch.Patches
                 {
                     var customReward = Plugin.Instance.twitchCustomRewards.Data.Exists(x => x.Id == reward.Id);
 
-                    Log.Info($"Reward: {reward.Title} - custom: {customReward}");
+                    //Log.Info($"Reward: {reward.Title} - custom: {customReward}");
 
                     var title = reward.Title;
                     var data = RewardsConfig.Get(reward.Id);
