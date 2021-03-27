@@ -307,9 +307,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\Actions.cs" />
+    <Compile Include="Actions\StartRandomEvent.cs" />
     <Compile Include="Actions\HUDMessageAction.cs" />
     <Compile Include="Actions\RavenMessageAction.cs" />
     <Compile Include="Actions\SpawnCreatureAction.cs" />
+    <Compile Include="Helpers\StringExt.cs" />
+    <Compile Include="Patches\RandEventSystemPatch.cs" />
     <Compile Include="Patches\Game.cs" />
     <Compile Include="RewardsConfig.cs" />
     <Compile Include="Helpers\Colors.cs" />

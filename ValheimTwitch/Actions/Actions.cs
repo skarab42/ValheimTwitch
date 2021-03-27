@@ -5,9 +5,10 @@ using ValheimTwitch.Twitch.PubSub.Messages;
 namespace ValheimTwitch.Events
 {
     // 0 None
-    // 1 RavenMessage  > <type>
-    // 2 SpawnCreature > <position>
-    // 3 HUDMessage    > <type> [level] [count] [distance]
+    // 1 RavenMessage       > <type>
+    // 2 SpawnCreature      > <position>
+    // 3 HUDMessage         > <type> [level] [count] [distance]
+    // 4 Start random event
 
     public static class Actions
     {
@@ -31,6 +32,9 @@ namespace ValheimTwitch.Events
                         break;
                     case 3:
                         HUDMessageAction.Run(redemption, data);
+                        break;
+                    case 4:
+                        StartRandomEvent.Run(redemption, data);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
