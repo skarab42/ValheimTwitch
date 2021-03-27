@@ -203,9 +203,14 @@ namespace ValheimTwitch.Twitch.API
         public string CreateCustomReward(NewRewardArgs reward)
         {
             var color = Random.ColorHSV(0f, 1f, 0.6f, 0.7f, 0.4f, 0.5f);
-            var hexColor = "#" + ColorUtility.ToHtmlStringRGB(color);
+            var backgroundColor = "#" + ColorUtility.ToHtmlStringRGB(color);
             var url = $"{helixURL}/channel_points/custom_rewards?broadcaster_id={user.Id}";
-            var query = $"title={reward.Title}&cost={reward.Cost}&prompt={reward.Prompt}&is_user_input_required={reward.IsUserInputRequired}&background_color={hexColor}";
+            var query = $"title={reward.Title}" +
+                        $"&cost={reward.Cost}" +
+                        $"&prompt={reward.Prompt}" +
+                        $"&background_color={backgroundColor}" +
+                        $"&is_user_input_required={reward.IsUserInputRequired}" +
+                        $"&should_redemptions_skip_request_queue={reward.ShouldRedemptionsSkipRequestQueue}";
 
             try
             {
