@@ -9,11 +9,11 @@ WIP project developed [on Twitch](https://twitch.tv/skarab42). Follow [my channe
 - In game Twitch authentication.
 - Create managed reward in game.
 - Print a message in the HUD (center or top left).
-- Send a message to the brodcaster via Hugin (the crow in the tutorial). 
+- Send a message to the broadcaster via Hugin (the crow in the tutorial). 
 - Viewers can change weather for a predefined duration.
 - Viewers can start events for a predefined duration (ex.: blobs horde).
 - Auto enable/disable managed reward when the game start/stop/quit.
-- Spawn different entity (more or less aggressive, Troll, Boar, etc..) configurable in the game by the brodcaster.
+- Spawn different entity (more or less aggressive, Troll, Boar, etc..) configurable in the game by the broadcaster.
 - Follow me on twitch.tv/skarab42 to get rid of Hugin start message.
 
 # Install
