@@ -10,7 +10,7 @@ namespace ValheimTwitch.Events
         {
             var munin = data["Type"].Value<bool>();
 
-            RavenPatch.Message(redemption.User.DisplayName, redemption.UserInput, munin);
+            RavenPatch.Message(redemption.User.DisplayName, redemption.UserInput?? "Caw! Caw!", munin);
         }
     }
 }

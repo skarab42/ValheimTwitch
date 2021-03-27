@@ -9,7 +9,7 @@ namespace ValheimTwitch.Events
         {
             var position = data["Position"].Value<int>();
             var user = redemption.User.DisplayName;
-            var text = redemption.UserInput;
+            var text = redemption.UserInput??"";
 
             var messageType = position == 0 ? MessageHud.MessageType.TopLeft : MessageHud.MessageType.Center;
 

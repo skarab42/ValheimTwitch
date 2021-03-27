@@ -5,14 +5,14 @@ using ValheimTwitch.Twitch.PubSub.Messages;
 
 namespace ValheimTwitch.Events
 {
-    internal class StartRandomEvent
+    internal class StartRandomEventAction
     {
         internal static void Run(Redemption redemption, JToken data)
         {
-            ConsoleUpdatePatch.AddAction(() => StartRandomEventAction(redemption, data));
+            ConsoleUpdatePatch.AddAction(() => StartRandomEvent(redemption, data));
         }
 
-        private static void StartRandomEventAction(Redemption redemption, JToken data)
+        private static void StartRandomEvent(Redemption redemption, JToken data)
         {
             var eventName = data["EventName"].Value<string>();
             var distance = data["Distance"].Value<int>();

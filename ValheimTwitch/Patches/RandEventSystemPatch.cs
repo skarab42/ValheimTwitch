@@ -60,7 +60,7 @@ namespace ValheimTwitch.Patches
                 return;
 
             var user = redemption.User.DisplayName;
-            var text = redemption.UserInput.Truncate(79);
+            var text = redemption.UserInput?.Truncate(79)??"";
 
             randomEvent.m_enabled = true;
             randomEvent.m_nearBaseOnly = false;
