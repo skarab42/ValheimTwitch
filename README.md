@@ -7,17 +7,19 @@ WIP project developed [on Twitch](https://twitch.tv/skarab42). Follow [my channe
 # Features
 
 - In game Twitch authentication.
+- Create managed reward in game.
 - Print a message in the HUD (center or top left).
 - Send a message to the brodcaster via Hugin (the crow in the tutorial). 
-- Spawn different entity (more or less aggressive, Troll, Boar, etc..) configurable in the game by the brodcaster.
-- Create managed reward in game.
+- Viewers can change weather for a predefined duration.
+- Viewers can start events for a predefined duration (ex.: blobs horde).
 - Auto enable/disable managed reward when the game start/stop/quit.
+- Spawn different entity (more or less aggressive, Troll, Boar, etc..) configurable in the game by the brodcaster.
 - Follow me on twitch.tv/skarab42 to get rid of Hugin start message.
 
 # Install
 
 - Download and install [BepInExPack_Valheim](https://valheim.thunderstore.io/package/denikson/BepInExPack_Valheim/).
-- Download last release [ValheimTwitch-v1.2.0](https://github.com/skarab42/ValheimTwitch/releases/download/v1.2.0/ValheimTwitch-v1.2.0.zip).
+- Download last release [ValheimTwitch-v1.3.0](https://github.com/skarab42/ValheimTwitch/releases/download/v1.3.0/ValheimTwitch-v1.3.0.zip).
 - Extract downloaded zip in `BepInEx/plugins` folder.
 - Run the game.
 - Enjoy!
