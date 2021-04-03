@@ -2,6 +2,8 @@
 using HarmonyLib;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Net;
 using UnityEngine.SceneManagement;
 using ValheimTwitch.Events;
 using ValheimTwitch.Helpers;
@@ -30,7 +32,7 @@ namespace ValheimTwitch
             "channel:manage:redemptions"
         };
 
-        public bool updateUI = false;
+        //public bool updateUI = false;
         public Rewards twitchRewards;
         public Rewards twitchCustomRewards;
         public Twitch.API.Client twitchClient;
@@ -94,21 +96,19 @@ namespace ValheimTwitch
 
             TwitchConnect();
             UpdateRwardsList();
-
-            updateUI = true;
         }
 
-        public void Update()
-        {
-            // TODO use action queue
-            if (updateUI)
-            {
-                FejdStartupStartPatch.UpdateRewardGrid();
-                FejdStartupStartPatch.UpdateMainButonText();
+        //public void Update()
+        //{
+        //    // TODO use action queue
+        //    if (updateUI)
+        //    {
+        //        FejdStartupStartPatch.UpdateRewardGrid();
+        //        FejdStartupStartPatch.UpdateMainButonText();
+        //    }
 
-                updateUI = false;
-            }
-        }
+        //    updateUI = false;
+        //}
 
         public User GetUser()
         {
@@ -183,6 +183,7 @@ namespace ValheimTwitch
         {
             twitchCustomRewards = twitchClient?.GetCustomRewards();
             twitchRewards = twitchClient?.GetRewards();
+            FejdStartupUpdatePatch.updateUI = true;
         }
 
         public void ToggleRewards(bool enable)
@@ -190,10 +191,33 @@ namespace ValheimTwitch
             if (twitchCustomRewards == null)
                 return;
 
-            foreach (var reward in twitchCustomRewards.Data)
+            bool needRefresh = false;
+
+            foreach (var reward in new List<Reward>(twitchCustomRewards.Data))
             {
-                //Log.Info($">>> ToggleReward: {reward.Id} -> {enable}");
-                twitchClient.ToggleReward(reward.Id, enable);
+                Log.Info($">>> ToggleReward: {reward.Id} -> {enable}");
+                try
+                {
+                    twitchClient.ToggleReward(reward.Id, enable);
+                }
+
+                catch (WebException e)
+                {
+                    HttpWebResponse response = (HttpWebResponse)e.Response;
+
+                    if (response.StatusCode != HttpStatusCode.NotFound)
+                    {
+                        throw e;
+                    }
+
+                    needRefresh = true;
+                }
+            }
+
+            if (needRefresh)
+            {
+                UpdateRwardsList();
+                FejdStartupUpdatePatch.updateUI = true;
             }
         }
 

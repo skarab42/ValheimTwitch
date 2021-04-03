@@ -197,7 +197,6 @@ namespace ValheimTwitch.Twitch.API
 
                 return null;
             }
-
         }
 
         public string CreateCustomReward(NewRewardArgs reward)

@@ -6,6 +6,24 @@ using ValheimTwitch.Twitch.API.Helix;
 
 namespace ValheimTwitch.Patches
 {
+    [HarmonyPatch(typeof(FejdStartup), "Update")]
+    public static class FejdStartupUpdatePatch
+    {
+        public static bool updateUI = false;
+
+        public static void Postfix()
+        {
+            // TODO use action queue
+            if (updateUI)
+            {
+                FejdStartupStartPatch.UpdateRewardGrid();
+                FejdStartupStartPatch.UpdateMainButonText();
+            }
+
+            updateUI = false;
+        }
+    }
+
     [HarmonyPatch(typeof(FejdStartup), "Start")]
     public static class FejdStartupStartPatch
     {
