@@ -59,10 +59,11 @@ namespace ValheimTwitch.Patches
         {
             try
             {
-                Plugin.Instance.twitchClient.CreateCustomReward(reward);
+                var newReward = Plugin.Instance.twitchClient.CreateCustomReward(reward);
                 Plugin.Instance.UpdateRwardsList();
                 guiScript.addRewardForm.Hide();
-                UpdateRewardGrid();
+                UpdateRewardGrid(newReward.Id);
+                guiScript.rewardSettings.SetActive(true);
             }
             catch(CustomRewardException e)
             {
@@ -116,7 +117,7 @@ namespace ValheimTwitch.Patches
             guiScript?.mainButton.SetText(user == null ? "Connexion" : user.DisplayName);
         }
 
-        public static void UpdateRewardGrid()
+        public static void UpdateRewardGrid(string newRewardId = null)
         {
             guiScript?.rewardGrid.Clear();
 
@@ -139,12 +140,14 @@ namespace ValheimTwitch.Patches
                     var texture = TextureLoader.LoadFromURL((reward.Image ?? reward.DefaultImage).Url4x);
                     var rewardGridItem = new RewardGridItem(reward.Id, title, color, texture, customReward, data);
 
-                    guiScript.rewardGrid.Add(rewardGridItem);
+                    bool isNew = newRewardId == reward.Id;
+
+                    guiScript.rewardGrid.Add(rewardGridItem, isNew);
                 }
                 catch (Exception e)
                 {
                     Log.Error(e.ToString());
-                    Log.Warning($"Reward image unavailable: {reward.Title}");
+                    //Log.Warning($"Reward image unavailable: {reward.Title}");
                 }
             }
         }

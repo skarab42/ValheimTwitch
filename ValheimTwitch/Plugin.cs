@@ -195,12 +195,11 @@ namespace ValheimTwitch
 
             foreach (var reward in new List<Reward>(twitchCustomRewards.Data))
             {
-                Log.Info($">>> ToggleReward: {reward.Id} -> {enable}");
                 try
                 {
+                    //Log.Info($">>> ToggleReward: {reward.Id} -> {enable}");
                     twitchClient.ToggleReward(reward.Id, enable);
                 }
-
                 catch (WebException e)
                 {
                     HttpWebResponse response = (HttpWebResponse)e.Response;

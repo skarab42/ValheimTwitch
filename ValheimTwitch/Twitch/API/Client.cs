@@ -199,7 +199,7 @@ namespace ValheimTwitch.Twitch.API
             }
         }
 
-        public string CreateCustomReward(NewRewardArgs reward)
+        public Reward CreateCustomReward(NewRewardArgs reward)
         {
             var color = Random.ColorHSV(0f, 1f, 0.6f, 0.7f, 0.4f, 0.5f);
             var backgroundColor = "#" + ColorUtility.ToHtmlStringRGB(color);
@@ -215,7 +215,9 @@ namespace ValheimTwitch.Twitch.API
 
             try
             {
-                return Post(url, query);
+                var json = Post(url, query);
+                Log.Info(json);
+                return JsonConvert.DeserializeObject<Rewards>(json).Data[0];
             }
             catch (WebException e)
             {
