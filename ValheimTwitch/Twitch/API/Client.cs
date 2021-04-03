@@ -204,10 +204,12 @@ namespace ValheimTwitch.Twitch.API
         {
             var color = Random.ColorHSV(0f, 1f, 0.6f, 0.7f, 0.4f, 0.5f);
             var backgroundColor = "#" + ColorUtility.ToHtmlStringRGB(color);
-            var url = $"{helixURL}/channel_points/custom_rewards?broadcaster_id={user.Id}";
-            var query = $"title={reward.Title}" +
+            var url = $"{helixURL}/channel_points/custom_rewards";
+            var query = $"is_enabled=false" +
                         $"&cost={reward.Cost}" +
+                        $"&title={reward.Title}" +
                         $"&prompt={reward.Prompt}" +
+                        $"&broadcaster_id={user.Id}" +
                         $"&background_color={backgroundColor}" +
                         $"&is_user_input_required={reward.IsUserInputRequired}" +
                         $"&should_redemptions_skip_request_queue={reward.ShouldRedemptionsSkipRequestQueue}";
