@@ -98,18 +98,6 @@ namespace ValheimTwitch
             UpdateRwardsList();
         }
 
-        //public void Update()
-        //{
-        //    // TODO use action queue
-        //    if (updateUI)
-        //    {
-        //        FejdStartupStartPatch.UpdateRewardGrid();
-        //        FejdStartupStartPatch.UpdateMainButonText();
-        //    }
-
-        //    updateUI = false;
-        //}
-
         public User GetUser()
         {
             return twitchClient?.user;
@@ -162,15 +150,22 @@ namespace ValheimTwitch
 
                 User user = twitchClient.GetUser();
                 var isFollowing = twitchClient.IsFollowing();
+                var isAffiliate = twitchClient.IsAffiliate();
+                var isPatner = twitchClient.IsPartner();
 
-                Log.Info($"Twitch User: {user.Login} (follow: {isFollowing})");
+                Log.Info($"Twitch User: {user.Login}");
+                Log.Info($"- isFollowing: {isFollowing}");
+                Log.Info($"- isAffiliate: {isAffiliate}");
+                Log.Info($"- isPatner: {isPatner}");
 
-                UpdateRwardsList();
+                if (twitchClient.HasChannelPoints()) {
+                    UpdateRwardsList();
 
-                twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
-                twitchPubSubClient.OnMaxReconnect += OnMaxReconnect;
+                    twitchPubSubClient.OnRewardRedeemed += OnRewardRedeemed;
+                    twitchPubSubClient.OnMaxReconnect += OnMaxReconnect;
 
-                twitchPubSubClient.Connect();
+                    twitchPubSubClient.Connect();
+                }
             }
             catch (Exception e)
             {

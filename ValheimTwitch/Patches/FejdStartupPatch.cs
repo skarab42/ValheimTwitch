@@ -105,9 +105,14 @@ namespace ValheimTwitch.Patches
         private static void OnMainButtonClick()
         {
             if (Plugin.Instance.GetUser() == null)
+            {
                 Plugin.Instance.TwitchAuth();
+            }
             else
+            {
+                guiScript.notAffiliatPanel.SetActive(!Plugin.Instance.twitchClient.HasChannelPoints());
                 guiScript.mainPanel.ToggleActive();
+            }
         }
 
         public static void UpdateMainButonText()

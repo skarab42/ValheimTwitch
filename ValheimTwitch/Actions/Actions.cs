@@ -7,9 +7,10 @@ namespace ValheimTwitch.Events
     // 0 None
     // 1 RavenMessage
     // 2 SpawnCreature
-    // 3 ChangeEnvironment 
+    // 3 HUD message
     // 4 Start event
     // 5 Environement
+    // 6 Player action (puke, heal, ...)
 
     public static class Actions
     {
@@ -39,6 +40,9 @@ namespace ValheimTwitch.Events
                         break;
                     case 5:
                         ChangeEnvironmentAction.Run(redemption, data);
+                        break;
+                    case 6:
+                        PlayerAction.Run(redemption, data);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

@@ -151,6 +151,9 @@ namespace ValheimTwitch.Twitch.API
 
         public Rewards GetRewards(bool custom = false)
         {
+            if (!HasChannelPoints())
+                return null;
+            
             string json = Get($"{helixURL}/channel_points/custom_rewards?broadcaster_id={user.Id}&only_manageable_rewards={custom}");
 
             return JsonConvert.DeserializeObject<Rewards>(json);
@@ -159,6 +162,21 @@ namespace ValheimTwitch.Twitch.API
         public Rewards GetCustomRewards()
         {
             return GetRewards(true);
+        }
+
+        public bool IsAffiliate()
+        {
+            return user?.BroadcasterType == "affiliate";
+        }
+
+        public bool IsPartner()
+        {
+            return user?.BroadcasterType == "partner";
+        }
+
+        public bool HasChannelPoints()
+        {
+            return IsAffiliate() || IsPartner();
         }
 
         public bool IsFollowing()
@@ -216,7 +234,7 @@ namespace ValheimTwitch.Twitch.API
             try
             {
                 var json = Post(url, query);
-                Log.Info(json);
+
                 return JsonConvert.DeserializeObject<Rewards>(json).Data[0];
             }
             catch (WebException e)
