@@ -5,7 +5,43 @@ namespace ValheimTwitch.Helpers
 {
     public static class Prefab
     {
-        public static void Spawn(string type, int level = 1, float offset = 100)
+        public static Tameable SetTameable(ZNetView znview, GameObject go)
+        {
+            if (go.GetComponent<MonsterAI>() == null)
+            {
+                Log.Warning(go.name + " is not tamable");
+
+                return null;
+            }
+
+            Tameable tame;
+
+            if (!go.TryGetComponent(out tame))
+            {
+                tame = go.AddComponent<Tameable>();
+            }
+
+            var tameable = ZNetScene.instance.GetPrefab("Wolf").GetComponent<Tameable>();
+
+            tame.m_petEffect = tameable.m_petEffect;
+            tame.m_tamingTime = tameable.m_tamingTime;
+            tame.m_commandable = tameable.m_commandable;
+            tame.m_fedDuration = tameable.m_fedDuration;
+            tame.m_tamedEffect = tameable.m_tamedEffect;
+            tame.m_sootheEffect = tameable.m_sootheEffect;
+
+            znview.GetZDO().Set($"{Plugin.GUID}-tamed", true);
+
+            return tame;
+        }
+
+        static void SetName(ZNetView znview, Character character, string name)
+        {
+            character.m_name = name;
+            znview.GetZDO().Set($"{Plugin.GUID}-name", name);
+        }
+
+        public static void Spawn(string type, int level = 1, float offset = 100, bool tamed = false, string name = null)
         {
             try
             {
@@ -43,10 +79,24 @@ namespace ValheimTwitch.Helpers
 
                 var character = instance.GetComponent<Character>();
 
-                if (character && level > 0)
-                {
+                if (character == null)
+                    return;
+
+                Humanoid humanoid = character.GetComponent<Humanoid>();
+                ZNetView znview = character.GetComponent<ZNetView>();
+                Tameable component = SetTameable(znview, instance);
+
+                if (name != null)
+                    SetName(znview, character, name);
+
+                if (humanoid)
+                    humanoid.m_faction = Character.Faction.Players;
+
+                if (tamed && component != null)
+                    component.Tame();
+
+                if (level > 0)
                     character.SetLevel(level);
-                }
             }
             catch (Exception ex)
             {
