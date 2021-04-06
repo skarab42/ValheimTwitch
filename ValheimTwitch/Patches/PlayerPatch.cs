@@ -22,10 +22,12 @@ namespace ValheimTwitch.Patches
     {
         public static void Postfix(ref HashSet<string> ___m_shownTutorials)
         {
-            if (Plugin.Instance.twitchClient != null && Plugin.Instance.twitchClient.IsFollowing())
+            if (Plugin.Instance.isHuginIntroShown || (Plugin.Instance.twitchClient != null && Plugin.Instance.twitchClient.IsFollowing()))
                 return;
 
             RavenPatch.Message($"Welcome to {Plugin.NAME}", "Follow me on twitch.tv/skarab42 to get rid of this message ;)", false);
+
+            Plugin.Instance.isHuginIntroShown = true;
         }
     }
 
