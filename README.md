@@ -44,8 +44,8 @@ WIP project developed [on Twitch](https://twitch.tv/skarab42). Follow [my channe
 ## Manual (BepInEx already installed)
 
 - Download and install [BepInExPack_Valheim](https://valheim.thunderstore.io/package/denikson/BepInExPack_Valheim/).
-- Download last release [ValheimTwitch-v1.4.0](https://github.com/skarab42/ValheimTwitch/releases/download/v1.4.0/ValheimTwitch-v1.4.0.zip).
-- Extract downloaded zip in `BepInEx/plugins` folder.
+- Download last release [ValheimTwitch.dll](https://github.com/skarab42/ValheimTwitch/releases/download/v1.4.0/ValheimTwitch.dll).
+- Copy `ValheimTwitch.dll` into `<Steam Location>\steamapps\common\Valheim\BepInEx\plugins` folder.
 - Run the game.
 - Enjoy!
 
