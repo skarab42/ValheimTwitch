@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using ValheimTwitch.Helpers;
 using ValheimTwitch.Twitch.API.Helix;
+using ValheimTwitch.Update;
 
 namespace ValheimTwitch.Patches
 {
@@ -53,6 +54,13 @@ namespace ValheimTwitch.Patches
 
             UpdateMainButonText();
             UpdateRewardGrid();
+            ShowUpdatePanel();
+        }
+
+        public static void ShowUpdatePanel()
+        {
+            if (Release.HasNewVersion())
+                guiScript.updatePanel.SetActive(true);
         }
 
         private static void OnNewRewardSave(object sender, NewRewardArgs reward)
