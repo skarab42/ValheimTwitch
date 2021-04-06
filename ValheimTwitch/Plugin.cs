@@ -38,6 +38,8 @@ namespace ValheimTwitch
         public Twitch.API.Client twitchClient;
         public Twitch.PubSub.Client twitchPubSubClient;
 
+        public bool isHuginIntroShown = false;
+
         private static Plugin instance;
 
         public static Plugin Instance
@@ -105,7 +107,7 @@ namespace ValheimTwitch
 
         private void OnTokenError(object sender, TokenErrorArgs e)
         {
-            Log.Error($"OnTokenError: {e.Message}");
+            Log.Warning($"OnTokenError: {e.Message}");
             // TODO notify user...
         }
 
