@@ -326,6 +326,8 @@
     <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="PluginConfig.cs" />
     <Compile Include="Patches\ObjectStateExtensions.cs" />
+    <Compile Include="Update\Release.cs" />
+    <Compile Include="Update\ReleasePayload.cs" />
     <Compile Include="Twitch\API\Helix\CustomRewardException.cs" />
     <Compile Include="Twitch\API\Helix\CustomRewardResponse.cs" />
     <Compile Include="Twitch\API\Helix\FollowsResponse.cs" />

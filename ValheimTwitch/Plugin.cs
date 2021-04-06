@@ -19,8 +19,9 @@ namespace ValheimTwitch
         public const string GUID = "dev.skarab42.valheim.twitch";
         public const string NAME = "Valheim Twitch";
         public const string LABEL = "ValheimTwitch";
-        public const string VERSION = "1.2.0";
+        public const string VERSION = "1.3.0";
 
+        public const string GITHUB_RELEASE_URL = "https://api.github.com/repos/skarab42/ValheimTwitch/tags";
         public const string TWITCH_APP_CLIENT_ID = "5b9v1vm0jv7kx9afpmz0ylb3lp7k9w";
         public const string TWITCH_REDIRECT_HOST = "localhost";
         public const string TWITCH_SKARAB42_ID = "485824438"; //"18615783"; //
@@ -80,7 +81,6 @@ namespace ValheimTwitch
             instance = this;
 
             RewardsConfig.Load();
-
             TwitchConnect();
 
             SceneManager.activeSceneChanged += OnSceneChanged;
