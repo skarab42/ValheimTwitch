@@ -13,7 +13,7 @@ namespace ValheimTwitch.Events
             var level = data["Level"].Value<int>();
             var count = data["Count"].Value<int>();
             var offset = data["Distance"].Value<int>();
-            var tamed = data?["Tamed"].Value<bool>();
+            var tamed = data["Tamed"]?.Value<bool>();
 
             var name = redemption.User.DisplayName;
             var type = SpawnCreatureSettings.creatures[creature];
