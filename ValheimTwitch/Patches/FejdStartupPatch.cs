@@ -97,10 +97,13 @@ namespace ValheimTwitch.Patches
             try
             {
                 var newReward = Plugin.Instance.twitchClient.CreateCustomReward(reward);
-                Plugin.Instance.UpdateRwardsList();
-                guiScript.addRewardForm.Hide();
-                UpdateRewardGrid(newReward.Id);
-                guiScript.rewardSettings.SetActive(true);
+
+                Plugin.Instance.UpdateRwardsList(() =>
+                {
+                    guiScript.addRewardForm.Hide();
+                    UpdateRewardGrid(newReward.Id);
+                    guiScript.rewardSettings.SetActive(true);
+                });
             }
             catch(CustomRewardException e)
             {

@@ -183,13 +183,16 @@ namespace ValheimTwitch
             }
         }
 
-        public void UpdateRwardsList()
+        public void UpdateRwardsList(Action callback = null)
         {
             new Thread(() =>
             {
                 twitchCustomRewards = twitchClient?.GetCustomRewards();
                 twitchRewards = twitchClient?.GetRewards();
                 FejdStartupUpdatePatch.updateUI = true;
+
+                if (callback != null)
+                    ConsoleUpdatePatch.AddAction(callback);
             }).Start();
         }
 
