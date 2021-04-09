@@ -22,9 +22,6 @@ namespace ValheimTwitch.Helpers
                 tame = go.AddComponent<Tameable>();
             }
 
-            var humanoid = go.GetComponent<Humanoid>();
-            humanoid.m_faction = Character.Faction.Players;
-
             var tameable = ZNetScene.instance.GetPrefab("Wolf").GetComponent<Tameable>();
 
             tame.m_petEffect = tameable.m_petEffect;
@@ -98,6 +95,10 @@ namespace ValheimTwitch.Helpers
                 if (tamed && component != null)
                 {
                     component.Tame();
+
+                    var humanoid = instance.GetComponent<Humanoid>();
+                    humanoid.m_faction = Character.Faction.Players;
+
                     CharacterAwakePatch.tamedCharacters.Add(character);
                     znview.GetZDO().Set($"{Plugin.GUID}-tamed", true);
                 }
