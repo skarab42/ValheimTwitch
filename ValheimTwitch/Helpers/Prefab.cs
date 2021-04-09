@@ -22,6 +22,9 @@ namespace ValheimTwitch.Helpers
                 tame = go.AddComponent<Tameable>();
             }
 
+            var humanoid = go.GetComponent<Humanoid>();
+            humanoid.m_faction = Character.Faction.Players;
+
             var tameable = ZNetScene.instance.GetPrefab("Wolf").GetComponent<Tameable>();
 
             tame.m_petEffect = tameable.m_petEffect;
