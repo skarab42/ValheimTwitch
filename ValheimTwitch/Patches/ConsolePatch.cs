@@ -9,7 +9,7 @@ namespace ValheimTwitch.Patches
     {
         private static ConcurrentQueue<Action> actions = new ConcurrentQueue<Action>();
 
-        internal static void AddAction(Action action)
+        public static void AddAction(Action action)
         {
             actions.Enqueue(action);
         }
