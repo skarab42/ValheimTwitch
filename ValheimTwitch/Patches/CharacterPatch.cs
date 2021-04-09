@@ -24,10 +24,7 @@ namespace ValheimTwitch.Patches
 
             if (customTamed)
             {
-                Log.Info($"Add tamed character -> {customName}");
-
-                var humanoid = __instance.GetComponent<Humanoid>();
-                humanoid.m_faction = Character.Faction.Players;
+                //Log.Info($"Add tamed character -> {customName}");
 
                 tamedCharacters.Add(__instance);
                 Prefab.SetTameable(___m_nview, __instance.gameObject);
@@ -41,7 +38,7 @@ namespace ValheimTwitch.Patches
     {
         public static void Postfix(ref Character __instance, ref ZNetView ___m_name)
         {
-            Log.Info($"Remove tamed character -> {___m_name}");
+            //Log.Info($"Remove tamed character -> {___m_name}");
 
             CharacterAwakePatch.tamedCharacters.Remove(__instance);
         }
