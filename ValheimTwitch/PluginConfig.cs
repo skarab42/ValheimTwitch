@@ -45,5 +45,15 @@ namespace ValheimTwitch
         {
             PlayerPrefs.SetString(Key(key), value);
         }
+
+        public static int GetInt(string key)
+        {
+            return PlayerPrefs.GetInt(Key(key));
+        }
+
+        public static void SetInt(string key, int value)
+        {
+            PlayerPrefs.SetInt(Key(key), value);
+        }
     }
 }
