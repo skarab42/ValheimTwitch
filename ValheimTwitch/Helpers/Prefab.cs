@@ -34,9 +34,14 @@ namespace ValheimTwitch.Helpers
             return tame;
         }
 
-        static void SetName(ZNetView znview, Character character, string name)
+        public static string GetTamedName(string name, bool tamed)
         {
-            character.m_name = name;
+           return tamed ? $"{name} <color=magenta><3</color>" : name;
+        }
+
+        static void SetName(ZNetView znview, Character character, string name, bool tamed)
+        {
+            character.m_name = GetTamedName(name, tamed);
             znview.GetZDO().Set($"{Plugin.GUID}-name", name);
         }
 
@@ -81,15 +86,11 @@ namespace ValheimTwitch.Helpers
                 if (character == null)
                     return;
 
-                Humanoid humanoid = character.GetComponent<Humanoid>();
                 ZNetView znview = character.GetComponent<ZNetView>();
                 Tameable component = SetTameable(znview, instance);
 
                 if (name != null)
-                    SetName(znview, character, name);
-
-                if (humanoid)
-                    humanoid.m_faction = Character.Faction.Players;
+                    SetName(znview, character, name, tamed);
 
                 if (tamed && component != null)
                 {
