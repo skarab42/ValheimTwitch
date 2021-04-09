@@ -11,6 +11,8 @@ WIP project developed [on Twitch](https://twitch.tv/skarab42). Follow [my channe
 - In game Twitch authentication.
 - Create managed reward in game.
 - Auto enable/disable managed reward when the game start/stop/quit.
+- Whistle tamed creature (shortcut).
+- Enable/Disable rewards (shortcut).
 - Update version notification.
 
 ## For the viewers
