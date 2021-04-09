@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using ValheimTwitch.Helpers;
 using ValheimTwitch.Twitch.API.Helix;
@@ -25,12 +26,39 @@ namespace ValheimTwitch.Patches
         }
     }
 
+    public class Shortcut
+    {
+        public string Name { set; get; }
+        public string Label { set; get; }
+        public KeyCode Code { set; get; } = KeyCode.None;
+    }
+
     [HarmonyPatch(typeof(FejdStartup), "Start")]
     public static class FejdStartupStartPatch
     {
         public static GameObject gui;
         public static AssetBundle guiBundle;
         public static ValheimTwitchGUIScript guiScript;
+
+        public static List<Shortcut> shortcuts = new List<Shortcut> { 
+            new Shortcut { Name = "Whistle", Label = "Whistle" },
+            new Shortcut { Name = "ToggleAllRewards", Label = "Toggle all rewards" }
+        };
+        
+        public static void LoadShortcuts()
+        {
+            foreach (var shortcut in shortcuts)
+            {
+                shortcut.Code = (KeyCode)PluginConfig.GetInt($"shortcut-{shortcut.Name}");
+
+                Log.Info($"Load shortcut {shortcut.Name} -> {shortcut.Code}");
+
+                guiScript.settingsPanel.AddKeyInput(shortcut.Label, shortcut.Code, (object sender, KeyCodeArgs args) => {
+                    PluginConfig.SetInt($"shortcut-{shortcut.Name}", (int)args.Code);
+                    shortcut.Code = args.Code;
+                });
+            }
+        }
 
         public static void Postfix(FejdStartup __instance)
         {
@@ -55,6 +83,7 @@ namespace ValheimTwitch.Patches
             UpdateMainButonText();
             UpdateRewardGrid();
             ShowUpdatePanel();
+            LoadShortcuts();
         }
 
         public static void ShowUpdatePanel()

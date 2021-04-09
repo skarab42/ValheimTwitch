@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using UnityEngine;
+using WWUtils.Audio;
 
 namespace ValheimTwitch.Helpers
 {
@@ -75,6 +77,27 @@ namespace ValheimTwitch.Helpers
             }
 
             return texture;
+        }
+
+        public static AudioClip LoadAudioClip(string assetPath)
+        {
+            AudioClip audioClip = null;
+            Stream fileStream = LoadEmbeddedAsset(assetPath);
+
+            if (fileStream != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    fileStream.CopyTo(memoryStream);
+
+                    WAV wav = new WAV(memoryStream.ToArray());
+                    audioClip = AudioClip.Create(assetPath, wav.SampleCount, 1, wav.Frequency, false);
+
+                    audioClip.SetData(wav.LeftChannel, 0);
+                }
+            }
+
+            return audioClip;
         }
 
         public static Font GetFont(string fontName)

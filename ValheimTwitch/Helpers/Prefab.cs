@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using ValheimTwitch.Patches;
 
 namespace ValheimTwitch.Helpers
 {
@@ -29,8 +30,6 @@ namespace ValheimTwitch.Helpers
             tame.m_fedDuration = tameable.m_fedDuration;
             tame.m_tamedEffect = tameable.m_tamedEffect;
             tame.m_sootheEffect = tameable.m_sootheEffect;
-
-            znview.GetZDO().Set($"{Plugin.GUID}-tamed", true);
 
             return tame;
         }
@@ -93,7 +92,11 @@ namespace ValheimTwitch.Helpers
                     humanoid.m_faction = Character.Faction.Players;
 
                 if (tamed && component != null)
+                {
                     component.Tame();
+                    CharacterAwakePatch.tamedCharacters.Add(character);
+                    znview.GetZDO().Set($"{Plugin.GUID}-tamed", true);
+                }
 
                 if (level > 0)
                     character.SetLevel(level);

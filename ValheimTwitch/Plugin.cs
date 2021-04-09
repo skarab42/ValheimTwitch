@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using UnityEngine.SceneManagement;
 using ValheimTwitch.Events;
 using ValheimTwitch.Helpers;
@@ -33,13 +34,15 @@ namespace ValheimTwitch
             "channel:manage:redemptions"
         };
 
-        //public bool updateUI = false;
+        public bool isInGame = false;
+        public bool isRewardsEnabled = false;
+        public bool isHuginIntroShown = false;
+        public static bool isRewardUpdating = false;
+
         public Rewards twitchRewards;
         public Rewards twitchCustomRewards;
         public Twitch.API.Client twitchClient;
         public Twitch.PubSub.Client twitchPubSubClient;
-
-        public bool isHuginIntroShown = false;
 
         private static Plugin instance;
 
@@ -79,6 +82,10 @@ namespace ValheimTwitch
             }
 
             instance = this;
+
+#if DEBUG
+            SceneManager.LoadScene("start");
+#endif
 
             RewardsConfig.Load();
             TwitchConnect();
@@ -178,17 +185,28 @@ namespace ValheimTwitch
 
         public void UpdateRwardsList()
         {
-            twitchCustomRewards = twitchClient?.GetCustomRewards();
-            twitchRewards = twitchClient?.GetRewards();
-            FejdStartupUpdatePatch.updateUI = true;
+            new Thread(() =>
+            {
+                twitchCustomRewards = twitchClient?.GetCustomRewards();
+                twitchRewards = twitchClient?.GetRewards();
+                FejdStartupUpdatePatch.updateUI = true;
+            }).Start();
         }
 
         public void ToggleRewards(bool enable)
         {
-            if (twitchCustomRewards == null)
+            if (isRewardUpdating || twitchCustomRewards == null)
                 return;
 
             bool needRefresh = false;
+            isRewardsEnabled = enable;
+            isRewardUpdating = true;
+
+            if (isInGame)
+            {
+                var status = enable ? "Enabled" : "Disabled";
+                HUDMessageAction.PlayerMessage($"Twitch Rewards {status}");
+            }
 
             foreach (var reward in new List<Reward>(twitchCustomRewards.Data))
             {
@@ -210,6 +228,8 @@ namespace ValheimTwitch
                 }
             }
 
+            isRewardUpdating = false;
+
             if (needRefresh)
             {
                 UpdateRwardsList();
@@ -219,7 +239,9 @@ namespace ValheimTwitch
 
         private void OnSceneChanged(Scene current, Scene next)
         {
-            ToggleRewards(next.name == "main");
+            isInGame = next.name == "main";
+
+            ToggleRewards(isInGame);
         }
 
         private void OnMaxReconnect(object sender, Twitch.PubSub.MaxReconnectErrorArgs e)

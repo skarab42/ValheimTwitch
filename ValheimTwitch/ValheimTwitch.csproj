@@ -313,7 +313,9 @@
     <Compile Include="Actions\HUDMessageAction.cs" />
     <Compile Include="Actions\RavenMessageAction.cs" />
     <Compile Include="Actions\SpawnCreatureAction.cs" />
+    <Compile Include="Helpers\CustomInput.cs" />
     <Compile Include="Helpers\StringExt.cs" />
+    <Compile Include="Helpers\WAV.cs" />
     <Compile Include="Patches\CharacterPatch.cs" />
     <Compile Include="Patches\RandEventSystemPatch.cs" />
     <Compile Include="Patches\Game.cs" />
@@ -394,6 +396,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\ValheimTwitchGUI.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\calling-whistle.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
