@@ -26,8 +26,12 @@ namespace ValheimTwitch.Patches
             {
                 Log.Info($"Add tamed character -> {customName}");
 
+                var humanoid = __instance.GetComponent<Humanoid>();
+                humanoid.m_faction = Character.Faction.Players;
+
                 tamedCharacters.Add(__instance);
                 Prefab.SetTameable(___m_nview, __instance.gameObject);
+                __instance.m_name = Prefab.GetTamedName(customName, true);
             }
         }
     }
