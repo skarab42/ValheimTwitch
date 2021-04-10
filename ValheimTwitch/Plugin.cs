@@ -20,7 +20,7 @@ namespace ValheimTwitch
         public const string GUID = "dev.skarab42.valheim.twitch";
         public const string NAME = "Valheim Twitch";
         public const string LABEL = "ValheimTwitch";
-        public const string VERSION = "1.5.0";
+        public const string VERSION = "1.5.1";
 
         public const string GITHUB_RELEASE_URL = "https://api.github.com/repos/skarab42/ValheimTwitch/tags";
         public const string TWITCH_APP_CLIENT_ID = "5b9v1vm0jv7kx9afpmz0ylb3lp7k9w";
