@@ -402,6 +402,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "F:\Jeux\steamapps\common\Valheim\BepInEx\plugins\ValheimTwitch\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "F:\Jeux\steamapps\common\Valheim\BepInEx\plugins\ValheimTwitch\$(TargetFileName)"
+copy "$(TargetPath)" "C:\Users\skarab\source\repos\ValheimTwitch\build\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

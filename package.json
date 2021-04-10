@@ -1,0 +1,12 @@
+{
+  "name": "ValheimTwitch",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/skarab42/ValheimTwitch.git",
+  "author": "skarab42 <skarab@onlfait.ch>",
+  "license": "MIT",
+  "devDependencies": {
+    "fs-extra": "^9.1.0",
+    "jszip": "^3.6.0"
+  }
+}
