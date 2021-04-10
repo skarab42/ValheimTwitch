@@ -1,0 +1,7 @@
+{
+  "name": "ValheimTwitch",
+  "version_number": "1.5.0",
+  "website_url": "https://github.com/skarab42/ValheimTwitch",
+  "description": "This mod linked to the game Valheim allows your viewers on twitch to interract with you and their channel points by letting them send message with munin and hugin and allowed them to make troll spawn for example.",
+  "dependencies": ["denikson-BepInExPack_Valheim-5.4.901"]
+}
